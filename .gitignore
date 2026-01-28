@@ -1,0 +1,179 @@
+# See https://help.github.com/articles/ignoring-files/ for more about ignoring files.
+
+# dependencies
+/node_modules
+/.pnp
+.pnp.*
+.yarn/*
+!.yarn/patches
+!.yarn/plugins
+!.yarn/releases
+!.yarn/versions
+
+# testing
+/coverage
+
+# next.js
+/.next/
+/out/
+
+# production
+/build
+
+# misc
+.DS_Store
+*.pem
+*.exe
+
+# debug
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+.pnpm-debug.log*
+
+# env files (can opt-in for committing if needed)
+.env*
+
+# vercel
+.vercel
+
+# typescript
+*.tsbuildinfo
+next-env.d.ts
+
+# git worktrees
+/worktree
+
+.vercel
+*-api-key.*
+*_backup_*/
+.cursor/
+.Trashes
+.fseventsd
+*.sqlite
+api-key-*
+*~
+# Version: 0.33.0
+*.db
+*_key.*
+.directory
+node_modules/
+.pytest_cache/
+*.sln
+secret-*.*
+.next/
+env/
+*_secret.*
+.turbo/
+__pycache__/
+*.dbm
+dist/
+*-secret-key.*
+*.tmp
+*.suo
+# Linux
+# Python Cache & Bytecode
+[Dd]esktop.ini
+.claude/skills/*/secrets/
+*.sqlite3
+# Claude Code Configuration
+.DocumentRevisions-V100
+*_secret=*
+build/
+ehthumbs.db
+.claude/skills/*/*/*key*
+# Certificate files
+*.key.*
+# Cloud provider credentials
+.tscache/
+.venv/
+.AppleDouble
+out/
+# Purpose: Essential patterns for user projects
+.env
+*.rdb
+.VolumeIcon.icns
+*.jks
+Thumbs.db
+# Logs & Temporary Files
+.idea/
+.mypy_cache/
+# Private keys (specific patterns to avoid false positives)
+*.sublime-project
+.claude/plans/
+.Spotlight-V100
+.aws/credentials
+*.log
+.#*
+.vercel/
+.uv-cache/
+# FIXED: Issue #237 - Replaced overly broad *key* and *secret* patterns
+# Test Coverage
+*.bak
+private-key*
+*.egg
+*.egg-info/
+*.pfx
+# Node.js (for docs/Nextra)
+*.pyd
+*.swo
+*.pyc
+# ===========================================
+# Virtual Environments
+.nuxt/
+.coverage
+# IDE & Editors
+# ============================================
+*.temp
+.ruff_cache/
+.firebase/
+# OS Files
+.claude/skills/*/.env*
+*.njsproj
+!.env.example
+# Build Tools & Frameworks
+venv/
+*.sw?
+.LSOverride
+# Credential patterns in environment files
+*.sublime-workspace
+.claude/settings.local.json
+*-key.*
+*-secret.*
+# MoAI-ADK Package Distribution .gitignore
+logs/
+.claude/orchestrate-state.json
+.claude/.env.local*
+*-backup/
+dist-ssr/
+# Environment files
+*.pyo
+*.backup/
+.claude/local/
+# Updated: 2026-01-10
+# Skill-specific credentials
+.claude/skills/*/*/*secret*
+coverage.json
+*.swp
+.aws/config
+.moai-backups/
+# Mac
+.uv_cache/
+# Windows
+# Build Artifacts & Distribution
+.env/
+.netlify/
+.TemporaryItems
+.claude/skills/*/*/*token*
+# Deployment & CI/CD
+*.secret.*
+*.p12
+# Secrets and Credentials (CRITICAL)
+.env.*
+htmlcov/
+# Backups
+.vscode/
+secret-key-*
+*.backup
+.claude/settings.local.*.json
+*_token=*

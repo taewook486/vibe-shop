@@ -1,0 +1,58 @@
+@import "tailwindcss";
+@config "../../tailwind.config.ts";
+
+@layer base {
+  :root {
+    --background: 0 0% 100%;
+    --foreground: 0 0% 3.9%;
+    --card: 0 0% 100%;
+    --card-foreground: 0 0% 3.9%;
+    --popover: 0 0% 100%;
+    --popover-foreground: 0 0% 3.9%;
+    --primary: 217 91% 60%;
+    --primary-foreground: 0 0% 98%;
+    --secondary: 258 90% 66%;
+    --secondary-foreground: 0 0% 98%;
+    --accent: 38 92% 50%;
+    --accent-foreground: 0 0% 9%;
+    --muted: 0 0% 96.1%;
+    --muted-foreground: 0 0% 45.1%;
+    --border: 0 0% 89.8%;
+    --input: 0 0% 89.8%;
+    --ring: 217 91% 60%;
+    --radius: 0.5rem;
+    --destructive: 0 84.2% 60.2%;
+    --destructive-foreground: 0 0% 98%;
+  }
+}
+
+@layer base {
+  * {
+    border-color: hsl(var(--border));
+  }
+  body {
+    background-color: hsl(var(--background));
+    color: hsl(var(--foreground));
+  }
+}
+
+/* Border width utilities */
+@utility border-3 {
+  border-width: 3px;
+}
+@utility border-b-3 {
+  border-bottom-width: 3px;
+}
+@utility border-t-3 {
+  border-top-width: 3px;
+}
+@utility border-y-3 {
+  border-top-width: 3px;
+  border-bottom-width: 3px;
+}
+@utility border-l-3 {
+  border-left-width: 3px;
+}
+@utility border-r-3 {
+  border-right-width: 3px;
+}

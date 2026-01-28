@@ -1,0 +1,157 @@
+# Page snapshot
+
+```yaml
+- generic [active] [ref=e1]:
+  - generic [ref=e2]:
+    - banner [ref=e3]:
+      - generic [ref=e5]:
+        - generic [ref=e6]:
+          - link "VIBE STORE" [ref=e7] [cursor=pointer]:
+            - /url: /
+          - navigation [ref=e8]:
+            - list [ref=e9]:
+              - listitem [ref=e10]:
+                - link "상품" [ref=e11] [cursor=pointer]:
+                  - /url: /products
+              - listitem [ref=e12]:
+                - link "카테고리" [ref=e13] [cursor=pointer]:
+                  - /url: /categories
+              - listitem [ref=e14]:
+                - link "후기" [ref=e15] [cursor=pointer]:
+                  - /url: /reviews
+              - listitem [ref=e16]:
+                - link "문의" [ref=e17] [cursor=pointer]:
+                  - /url: /inquiries
+              - listitem [ref=e18]:
+                - link "소개" [ref=e19] [cursor=pointer]:
+                  - /url: /about
+        - generic [ref=e20]:
+          - button "검색" [ref=e21]:
+            - img [ref=e22]
+          - link "장바구니" [ref=e25] [cursor=pointer]:
+            - /url: /cart
+            - img [ref=e26]
+            - generic [ref=e30]: "0"
+          - link "로그인" [ref=e31] [cursor=pointer]:
+            - /url: /login
+            - img [ref=e32]
+            - generic [ref=e35]: 로그인
+    - main [ref=e36]:
+      - generic [ref=e37]:
+        - generic [ref=e40]:
+          - heading "디지털 상품 쇼핑몰 스캘레톤" [level=1] [ref=e41]
+          - paragraph [ref=e42]: 라이브 코딩으로 만드는 완벽한 시작점. Next.js + Supabase + Toss Payments로 당신만의 디지털 상품 쇼핑몰을 구축하세요.
+          - generic [ref=e43]:
+            - link "상품 둘러보기" [ref=e44] [cursor=pointer]:
+              - /url: /products
+              - img [ref=e45]
+              - text: 상품 둘러보기
+            - link "자세히 보기" [ref=e48] [cursor=pointer]:
+              - /url: /about
+        - generic [ref=e50]:
+          - heading "주요 기능" [level=2] [ref=e51]
+          - paragraph [ref=e52]: 디지털 상품을 판매하는 데 필요한 모든 기능이 준비되어 있습니다.
+          - generic [ref=e53]:
+            - generic [ref=e54]:
+              - img [ref=e56]
+              - heading "디지털 상품 판매" [level=3] [ref=e59]
+              - paragraph [ref=e60]: 템플릿, 디자인, 코드 등 디지털 상품을 손쉽게 등록하고 판매할 수 있습니다.
+            - generic [ref=e61]:
+              - img [ref=e63]
+              - heading "간편한 결제" [level=3] [ref=e65]
+              - paragraph [ref=e66]: Toss Payments 통합으로 안전하고 빠른 결제를 제공합니다.
+            - generic [ref=e67]:
+              - img [ref=e69]
+              - heading "즉시 다운로드" [level=3] [ref=e72]
+              - paragraph [ref=e73]: 결제 완료 후 즉시 다운로드 센터에서 파일을 받을 수 있습니다.
+        - generic [ref=e75]:
+          - heading "지금 시작하세요" [level=2] [ref=e76]
+          - paragraph [ref=e77]: 라이브 코딩 콘텐츠와 함께 나만의 쇼핑몰을 만들어보세요.
+          - link "상품 보러가기" [ref=e79] [cursor=pointer]:
+            - /url: /products
+    - contentinfo [ref=e80]:
+      - generic [ref=e82]:
+        - generic [ref=e83]:
+          - link "VIBE STORE" [ref=e84] [cursor=pointer]:
+            - /url: /
+          - paragraph [ref=e85]: 라이브 코딩으로 만드는 디지털 상품 쇼핑몰 스캘레톤
+          - generic [ref=e86]:
+            - link "GitHub" [ref=e87] [cursor=pointer]:
+              - /url: https://github.com/vibelabs
+              - img [ref=e88]
+            - link "YouTube" [ref=e91] [cursor=pointer]:
+              - /url: https://youtube.com/@vibelabs
+              - img [ref=e92]
+            - link "Twitter" [ref=e95] [cursor=pointer]:
+              - /url: https://twitter.com/vibelabs
+              - img [ref=e96]
+            - link "Email" [ref=e98] [cursor=pointer]:
+              - /url: mailto:hello@vibestore.com
+              - img [ref=e99]
+        - generic [ref=e102]:
+          - heading "상품" [level=3] [ref=e103]
+          - list [ref=e104]:
+            - listitem [ref=e105]:
+              - link "상품 둘러보기" [ref=e106] [cursor=pointer]:
+                - /url: /products
+            - listitem [ref=e107]:
+              - link "카테고리" [ref=e108] [cursor=pointer]:
+                - /url: /categories
+            - listitem [ref=e109]:
+              - link "신규 상품" [ref=e110] [cursor=pointer]:
+                - /url: /new
+            - listitem [ref=e111]:
+              - link "베스트 셀러" [ref=e112] [cursor=pointer]:
+                - /url: /best
+        - generic [ref=e113]:
+          - heading "고객지원" [level=3] [ref=e114]
+          - list [ref=e115]:
+            - listitem [ref=e116]:
+              - link "FAQ" [ref=e117] [cursor=pointer]:
+                - /url: /faq
+            - listitem [ref=e118]:
+              - link "문의하기" [ref=e119] [cursor=pointer]:
+                - /url: /contact
+            - listitem [ref=e120]:
+              - link "다운로드 센터" [ref=e121] [cursor=pointer]:
+                - /url: /downloads
+            - listitem [ref=e122]:
+              - link "환불 정책" [ref=e123] [cursor=pointer]:
+                - /url: /refund
+        - generic [ref=e124]:
+          - heading "회사" [level=3] [ref=e125]
+          - list [ref=e126]:
+            - listitem [ref=e127]:
+              - link "회사 소개" [ref=e128] [cursor=pointer]:
+                - /url: /about
+            - listitem [ref=e129]:
+              - link "블로그" [ref=e130] [cursor=pointer]:
+                - /url: /blog
+            - listitem [ref=e131]:
+              - link "채용" [ref=e132] [cursor=pointer]:
+                - /url: /careers
+            - listitem [ref=e133]:
+              - link "보도자료" [ref=e134] [cursor=pointer]:
+                - /url: /press
+        - generic [ref=e135]:
+          - heading "약관 및 정책" [level=3] [ref=e136]
+          - list [ref=e137]:
+            - listitem [ref=e138]:
+              - link "이용약관" [ref=e139] [cursor=pointer]:
+                - /url: /terms
+            - listitem [ref=e140]:
+              - link "개인정보처리방침" [ref=e141] [cursor=pointer]:
+                - /url: /privacy
+            - listitem [ref=e142]:
+              - link "라이선스" [ref=e143] [cursor=pointer]:
+                - /url: /license
+      - generic [ref=e146]:
+        - paragraph [ref=e147]: © 2026 Vibe Labs. All rights reserved.
+        - generic [ref=e148]:
+          - generic [ref=e149]: MVP
+          - generic [ref=e150]: v0.1.0
+  - region "Notifications alt+T"
+  - button "Open Next.js Dev Tools" [ref=e156] [cursor=pointer]:
+    - img [ref=e157]
+  - alert [ref=e160]
+```

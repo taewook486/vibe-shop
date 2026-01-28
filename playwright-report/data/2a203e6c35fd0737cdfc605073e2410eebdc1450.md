@@ -1,0 +1,161 @@
+# Page snapshot
+
+```yaml
+- generic [ref=e1]:
+  - generic [ref=e2]:
+    - banner [ref=e3]:
+      - generic [ref=e5]:
+        - generic [ref=e6]:
+          - link "VIBE STORE" [ref=e7] [cursor=pointer]:
+            - /url: /
+          - navigation [ref=e8]:
+            - list [ref=e9]:
+              - listitem [ref=e10]:
+                - link "상품" [ref=e11] [cursor=pointer]:
+                  - /url: /products
+                  - text: 상품
+              - listitem [ref=e13]:
+                - link "카테고리" [ref=e14] [cursor=pointer]:
+                  - /url: /categories
+              - listitem [ref=e15]:
+                - link "후기" [ref=e16] [cursor=pointer]:
+                  - /url: /reviews
+              - listitem [ref=e17]:
+                - link "문의" [ref=e18] [cursor=pointer]:
+                  - /url: /inquiries
+              - listitem [ref=e19]:
+                - link "소개" [ref=e20] [cursor=pointer]:
+                  - /url: /about
+        - generic [ref=e21]:
+          - button "검색" [ref=e22]:
+            - img [ref=e23]
+          - link "장바구니" [ref=e26] [cursor=pointer]:
+            - /url: /cart
+            - img [ref=e27]
+            - generic [ref=e31]: "0"
+          - link "로그인" [ref=e32] [cursor=pointer]:
+            - /url: /login
+            - img [ref=e33]
+            - generic [ref=e36]: 로그인
+    - main [ref=e37]:
+      - generic [ref=e38]:
+        - complementary [ref=e39]:
+          - heading "카테고리" [level=2] [ref=e40]
+          - list [ref=e41]:
+            - listitem [ref=e42]:
+              - button "전체" [ref=e43]
+            - listitem [ref=e44]:
+              - button "디지털 상품(0)" [active] [ref=e45]:
+                - text: 디지털 상품
+                - generic [ref=e46]: (0)
+            - listitem [ref=e47]:
+              - button "Test Category(0)" [ref=e48]:
+                - text: Test Category
+                - generic [ref=e49]: (0)
+            - listitem [ref=e50]:
+              - button "eBook(1)" [ref=e51]:
+                - text: eBook
+                - generic [ref=e52]: (1)
+            - listitem [ref=e53]:
+              - button "템플릿(1)" [ref=e54]:
+                - text: 템플릿
+                - generic [ref=e55]: (1)
+        - main [ref=e56]:
+          - generic [ref=e57]:
+            - heading "상품 목록" [level=1] [ref=e58]
+            - generic [ref=e59]:
+              - generic [ref=e60]: "정렬:"
+              - combobox "정렬" [ref=e61]:
+                - option "인기순" [selected]
+                - option "최신순"
+                - option "가격 낮은순"
+                - option "가격 높은순"
+          - generic [ref=e62]:
+            - paragraph [ref=e63]: 상품이 없습니다
+            - paragraph [ref=e64]: 다른 카테고리를 선택해보세요
+    - contentinfo [ref=e65]:
+      - generic [ref=e67]:
+        - generic [ref=e68]:
+          - link "VIBE STORE" [ref=e69] [cursor=pointer]:
+            - /url: /
+          - paragraph [ref=e70]: 라이브 코딩으로 만드는 디지털 상품 쇼핑몰 스캘레톤
+          - generic [ref=e71]:
+            - link "GitHub" [ref=e72] [cursor=pointer]:
+              - /url: https://github.com/vibelabs
+              - img [ref=e73]
+            - link "YouTube" [ref=e76] [cursor=pointer]:
+              - /url: https://youtube.com/@vibelabs
+              - img [ref=e77]
+            - link "Twitter" [ref=e80] [cursor=pointer]:
+              - /url: https://twitter.com/vibelabs
+              - img [ref=e81]
+            - link "Email" [ref=e83] [cursor=pointer]:
+              - /url: mailto:hello@vibestore.com
+              - img [ref=e84]
+        - generic [ref=e87]:
+          - heading "상품" [level=3] [ref=e88]
+          - list [ref=e89]:
+            - listitem [ref=e90]:
+              - link "상품 둘러보기" [ref=e91] [cursor=pointer]:
+                - /url: /products
+            - listitem [ref=e92]:
+              - link "카테고리" [ref=e93] [cursor=pointer]:
+                - /url: /categories
+            - listitem [ref=e94]:
+              - link "신규 상품" [ref=e95] [cursor=pointer]:
+                - /url: /new
+            - listitem [ref=e96]:
+              - link "베스트 셀러" [ref=e97] [cursor=pointer]:
+                - /url: /best
+        - generic [ref=e98]:
+          - heading "고객지원" [level=3] [ref=e99]
+          - list [ref=e100]:
+            - listitem [ref=e101]:
+              - link "FAQ" [ref=e102] [cursor=pointer]:
+                - /url: /faq
+            - listitem [ref=e103]:
+              - link "문의하기" [ref=e104] [cursor=pointer]:
+                - /url: /contact
+            - listitem [ref=e105]:
+              - link "다운로드 센터" [ref=e106] [cursor=pointer]:
+                - /url: /downloads
+            - listitem [ref=e107]:
+              - link "환불 정책" [ref=e108] [cursor=pointer]:
+                - /url: /refund
+        - generic [ref=e109]:
+          - heading "회사" [level=3] [ref=e110]
+          - list [ref=e111]:
+            - listitem [ref=e112]:
+              - link "회사 소개" [ref=e113] [cursor=pointer]:
+                - /url: /about
+            - listitem [ref=e114]:
+              - link "블로그" [ref=e115] [cursor=pointer]:
+                - /url: /blog
+            - listitem [ref=e116]:
+              - link "채용" [ref=e117] [cursor=pointer]:
+                - /url: /careers
+            - listitem [ref=e118]:
+              - link "보도자료" [ref=e119] [cursor=pointer]:
+                - /url: /press
+        - generic [ref=e120]:
+          - heading "약관 및 정책" [level=3] [ref=e121]
+          - list [ref=e122]:
+            - listitem [ref=e123]:
+              - link "이용약관" [ref=e124] [cursor=pointer]:
+                - /url: /terms
+            - listitem [ref=e125]:
+              - link "개인정보처리방침" [ref=e126] [cursor=pointer]:
+                - /url: /privacy
+            - listitem [ref=e127]:
+              - link "라이선스" [ref=e128] [cursor=pointer]:
+                - /url: /license
+      - generic [ref=e131]:
+        - paragraph [ref=e132]: © 2026 Vibe Labs. All rights reserved.
+        - generic [ref=e133]:
+          - generic [ref=e134]: MVP
+          - generic [ref=e135]: v0.1.0
+  - region "Notifications alt+T"
+  - button "Open Next.js Dev Tools" [ref=e141] [cursor=pointer]:
+    - img [ref=e142]
+  - alert [ref=e145]
+```

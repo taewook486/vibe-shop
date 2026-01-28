@@ -1,0 +1,50 @@
+# Next.js build output
+.next/**
+.next/*
+out
+
+# Dependencies
+node_modules
+
+# Testing
+coverage
+*.test.ts
+*.test.tsx
+test-results
+playwright-report
+
+# Environment files
+.env*
+!.env.example
+
+# Misc
+.DS_Store
+*.pem
+*.log
+
+# Git
+.git
+.gitignore
+
+# Vercel
+.vercel
+
+# Worktrees
+worktree
+
+# Editor
+.vscode
+.idea
+
+# Development scripts (keep only needed)
+scripts
+!scripts/deploy-vercel.ts
+
+# Docs
+docs
+
+# Tests directory
+tests
+
+# TypeScript
+*.tsbuildinfo
