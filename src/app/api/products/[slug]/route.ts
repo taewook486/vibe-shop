@@ -47,7 +47,7 @@ export async function GET(
     }
 
     // 미리보기 파일만 조회 (is_preview=true)
-    let files = [];
+    let files: any[] = [];
     try {
       const { data: filesData, error: filesError } = await supabase
         .from('product_files')
@@ -64,7 +64,7 @@ export async function GET(
     }
 
     // 태그 조회 (product_tags를 통해 조인)
-    let tags = [];
+    let tags: any[] = [];
     try {
       const { data: productTags, error: tagsError } = await supabase
         .from('product_tags')
