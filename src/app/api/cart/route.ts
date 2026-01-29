@@ -336,3 +336,61 @@ export async function POST(request: Request) {
     );
   }
 }
+
+// ============================================================================
+// DELETE /api/cart - 장바구니 비우기
+// ============================================================================
+
+export async function DELETE(request: Request) {
+  try {
+    // NextAuth 세션 확인
+    const session = await auth();
+    const userId = session?.user?.id;
+
+    const supabase = createAdminClient();
+
+    let query = supabase.from('cart_items').delete();
+
+    if (userId) {
+      // 회원: user_id로 삭제
+      query = query.eq('user_id', userId);
+    } else {
+      // 비회원: session_id로 삭제
+      const sessionId = await getOrCreateSessionId();
+      query = query.eq('session_id', sessionId);
+    }
+
+    const { error } = await query;
+
+    if (error) {
+      console.error('장바구니 비우기 실패:', error);
+      return NextResponse.json(
+        {
+          error: {
+            code: 'DELETE_ERROR',
+            message: '장바구니 비우기에 실패했습니다.',
+          },
+        },
+        { status: 500 }
+      );
+    }
+
+    return NextResponse.json(
+      {
+        message: '장바구니가 비워졌습니다.',
+      },
+      { status: 200 }
+    );
+  } catch (error) {
+    console.error('장바구니 비우기 중 예외 발생:', error);
+    return NextResponse.json(
+      {
+        error: {
+          code: 'INTERNAL_ERROR',
+          message: '서버 오류가 발생했습니다.',
+        },
+      },
+      { status: 500 }
+    );
+  }
+}

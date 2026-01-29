@@ -40,30 +40,34 @@ export default async function InquiriesPage({ searchParams }: InquiriesPageProps
   if (search) queryParams.set('search', search);
 
   const baseUrl = process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3000';
-  const response = await fetch(`${baseUrl}/api/inquiries?${queryParams.toString()}`, {
-    cache: 'no-store',
-  });
 
-  if (!response.ok) {
-    // 에러 발생 시 빈 데이터 반환
-    console.error('Failed to fetch inquiries:', response.status, response.statusText);
-    return (
-      <div className="min-h-screen bg-neo-cream">
-        <div className="max-w-6xl mx-auto px-4 py-8">
-          <div className="bg-neo-red border-3 border-neo-black shadow-neo p-8 text-center">
-            <h1 className="text-2xl font-black text-neo-black mb-4">문의 목록을 불러올 수 없습니다</h1>
-            <p className="text-neo-black/80 mb-6">일시적인 오류가 발생했습니다. 잠시 후 다시 시도해주세요.</p>
-            <a href="/inquiries" className="inline-flex items-center gap-2 px-6 py-3 bg-neo-blue text-white border-3 border-neo-black shadow-neo font-bold hover:translate-x-[2px] hover:translate-y-[2px] hover:shadow-neo-sm transition-all">
-              새로고침
-            </a>
-          </div>
-        </div>
-      </div>
-    );
+  // AbortController로 10초 타임아웃 설정
+  const controller = new AbortController();
+  const timeoutId = setTimeout(() => controller.abort(), 10000); // 10초
+
+  let response: Response;
+  try {
+    response = await fetch(`${baseUrl}/api/inquiries?${queryParams.toString()}`, {
+      cache: 'no-store',
+      signal: controller.signal,
+    });
+    clearTimeout(timeoutId);
+  } catch (fetchError: any) {
+    if (fetchError.name === 'AbortError') {
+      // 타임아웃 시 빈 데이터 반환
+      response = { ok: false, status: 408, statusText: 'Request Timeout' } as any;
+    } else {
+      throw fetchError;
+    }
   }
 
-  const data = await response.json();
-  const { inquiries, pagination } = data || { inquiries: [], pagination: { total: 0, totalPages: 1 } };
+  if (!response.ok) {
+    // 타임아웃 등 에러 발생 시 빈 데이터로 정상 페이지 렌더링
+    const { inquiries, pagination } = { inquiries: [], pagination: { total: 0, totalPages: 1 } };
+  } else {
+    const data = await response.json();
+    var { inquiries, pagination } = data || { inquiries: [], pagination: { total: 0, totalPages: 1 } };
+  }
 
   return (
     <div className="min-h-screen bg-neo-cream">

@@ -36,17 +36,33 @@ export default async function ReviewsPage({ searchParams }: ReviewsPageProps) {
   let pagination = { page: 1, limit: 20, total: 0, totalPages: 0 };
 
   try {
-    const response = await fetch(`${baseUrl}/api/reviews?${queryParams.toString()}`, {
-      cache: 'no-store',
-    });
+    // AbortController로 10초 타임아웃 설정
+    const controller = new AbortController();
+    const timeoutId = setTimeout(() => controller.abort(), 10000); // 10초
 
-    if (response.ok) {
-      const data = await response.json();
-      reviews = data.reviews || [];
-      pagination = data.pagination || pagination;
+    try {
+      const response = await fetch(`${baseUrl}/api/reviews?${queryParams.toString()}`, {
+        cache: 'no-store',
+        signal: controller.signal,
+      });
+
+      clearTimeout(timeoutId);
+
+      if (response.ok) {
+        const data = await response.json();
+        reviews = data.reviews || [];
+        pagination = data.pagination || pagination;
+      }
+    } catch (fetchError: any) {
+      if (fetchError.name === 'AbortError') {
+        // 타임아웃 시 빈 배열 반환
+        reviews = [];
+      } else {
+        throw fetchError;
+      }
     }
   } catch (error) {
-    console.error('Failed to fetch reviews:', error);
+    reviews = [];
   }
 
   return (

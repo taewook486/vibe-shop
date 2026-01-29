@@ -177,3 +177,4 @@ secret-key-*
 *.backup
 .claude/settings.local.*.json
 *_token=*
+.mcp.json

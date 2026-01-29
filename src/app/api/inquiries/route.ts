@@ -62,6 +62,40 @@ export async function GET(request: NextRequest) {
 
     const { page, limit, product_id, category, status, search, sort_by } = validated.data;
 
+    // 빠른 반환: 먼저 count만 조회해서 0이면 즉시 빈 응답 반환
+    const { count, error: countError } = await supabase
+      .from('inquiries')
+      .select('*', { count: 'exact', head: true });
+
+    if (countError) {
+      console.error('문의 count 조회 실패:', countError);
+      return NextResponse.json(
+        {
+          error: {
+            code: 'FETCH_ERROR',
+            message: '문의 목록 조회에 실패했습니다.',
+          },
+        },
+        { status: 500 }
+      );
+    }
+
+    // 데이터가 0개면 즉시 빈 응답 반환
+    if (count === 0) {
+      return NextResponse.json(
+        {
+          inquiries: [],
+          pagination: {
+            page,
+            limit,
+            total: 0,
+            totalPages: 0,
+          },
+        },
+        { status: 200 }
+      );
+    }
+
     // 쿼리 빌더 시작 (작성자 정보 포함)
     let query = supabase
       .from('inquiries')

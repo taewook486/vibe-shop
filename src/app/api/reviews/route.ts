@@ -59,6 +59,40 @@ export async function GET(request: Request) {
 
     const supabase = createAdminClient();
 
+    // 빠른 반환: 먼저 count만 조회해서 0이면 즉시 빈 응답 반환
+    const { count, error: countError } = await supabase
+      .from('reviews')
+      .select('*', { count: 'exact', head: true });
+
+    if (countError) {
+      console.error('후기 count 조회 실패:', countError);
+      return NextResponse.json(
+        {
+          error: {
+            code: 'FETCH_ERROR',
+            message: '후기 목록 조회에 실패했습니다.',
+          },
+        },
+        { status: 500 }
+      );
+    }
+
+    // 데이터가 0개면 즉시 빈 응답 반환
+    if (count === 0) {
+      return NextResponse.json(
+        {
+          reviews: [],
+          pagination: {
+            page,
+            limit,
+            total: 0,
+            totalPages: 0,
+          },
+        },
+        { status: 200 }
+      );
+    }
+
     // 쿼리 빌드
     let query = supabase
       .from('reviews')

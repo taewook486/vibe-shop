@@ -129,7 +129,17 @@ export default function CheckoutPage() {
         throw new Error(errorData.error?.message || '결제 처리에 실패했습니다');
       }
 
-      // 5. 장바구니 비우기
+      // 5. 장바구니 비우기 (API 호출)
+      try {
+        await fetch('/api/cart', {
+          method: 'DELETE',
+        });
+      } catch (cartError) {
+        console.error('장바구니 비우기 실패:', cartError);
+        // 장바구니 비우기 실패해도 주문은 완료된 것으로 처리
+      }
+
+      // 로컬 상태도 비우기
       useCartStore.getState().clearCart();
 
       // 6. 성공 페이지로 이동 (orderId, paymentKey, amount 모두 전달)
