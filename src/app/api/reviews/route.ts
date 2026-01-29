@@ -145,7 +145,7 @@ export async function GET(request: Request) {
     }
 
     // 페이지네이션
-    const { data: reviews, error, count } = await query.range(offset, offset + limit - 1);
+    const { data: reviews, error, count: totalCount } = await query.range(offset, offset + limit - 1);
 
     if (error) {
       console.error('후기 목록 조회 실패:', error);
@@ -166,8 +166,8 @@ export async function GET(request: Request) {
         pagination: {
           page,
           limit,
-          total: count || 0,
-          totalPages: Math.ceil((count || 0) / limit),
+          total: totalCount || 0,
+          totalPages: Math.ceil((totalCount || 0) / limit),
         },
       },
       { status: 200 }

@@ -159,7 +159,7 @@ export async function GET(request: NextRequest) {
     query = query.range(from, to);
 
     // 실행
-    const { data: inquiries, error, count } = await query;
+    const { data: inquiries, error, count: totalCount } = await query;
 
     if (error) {
       console.error('Inquiries fetch error:', error);
@@ -175,8 +175,8 @@ export async function GET(request: NextRequest) {
       pagination: {
         page,
         limit,
-        total: count || 0,
-        totalPages: Math.ceil((count || 0) / limit),
+        total: totalCount || 0,
+        totalPages: Math.ceil((totalCount || 0) / limit),
       },
     };
 
