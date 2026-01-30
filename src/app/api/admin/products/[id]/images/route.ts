@@ -23,7 +23,7 @@ const uploadImagesSchema = z.object({
   images: z.array(
     z.object({
       url: z.string().url(),
-      alt_text: z.string().max(200).optional(),
+      alt: z.string().max(200).optional(),
       is_primary: z.boolean().default(false),
       sort_order: z.number().int().min(0).default(0),
     })
@@ -90,7 +90,7 @@ export async function POST(
     const imagesToInsert = validated.images.map((img) => ({
       product_id: resolvedParams.id,
       url: img.url,
-      alt_text: img.alt_text || null,
+      alt: img.alt || null,
       is_primary: img.is_primary,
       sort_order: img.sort_order,
     }));

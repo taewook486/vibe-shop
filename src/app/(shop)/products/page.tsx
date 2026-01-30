@@ -11,7 +11,7 @@
  */
 
 import { useState, useEffect, Suspense, useMemo } from 'react';
-import { useSearchParams } from 'next/navigation';
+import { useSearchParams, useRouter, usePathname } from 'next/navigation';
 import { ProductCard } from '@/components/products/product-card';
 import { useProducts } from '@/hooks/use-products';
 import type { ProductsParams } from '@/types/products';
@@ -41,12 +41,15 @@ function getEffectivePrice(product: any): number {
 
 function ProductsContent() {
   const searchParams = useSearchParams();
+  const router = useRouter();
+  const pathname = usePathname();
   const categoryFromUrl = searchParams.get('category');
+  const sortFromUrl = searchParams.get('sort') as SortOption | null;
 
   const [params, setParams] = useState<ProductsParams>({
     page: 1,
     pageSize: 12,
-    sort: 'popular',
+    sort: sortFromUrl || 'popular',
     category: categoryFromUrl || undefined,
   });
 
@@ -54,15 +57,16 @@ function ProductsContent() {
   const [selectedCategory, setSelectedCategory] = useState<string | null>(categoryFromUrl);
   const [isLoadingCategories, setIsLoadingCategories] = useState(true);
 
-  // URL 파라미터 변경 시 카테고리 업데이트
+  // URL 파라미터 변경 시 카테고리 및 정렬 업데이트
   useEffect(() => {
     setSelectedCategory(categoryFromUrl);
     setParams((prev) => ({
       ...prev,
       category: categoryFromUrl || undefined,
+      sort: sortFromUrl || 'popular',
       page: 1,
     }));
-  }, [categoryFromUrl]);
+  }, [categoryFromUrl, sortFromUrl]);
 
   const { products, pagination, isLoading, error } = useProducts(params);
 
@@ -108,6 +112,16 @@ function ProductsContent() {
       category: categorySlug || undefined,
       page: 1, // Reset to first page
     }));
+
+    // Update URL
+    const updatedParams = new URLSearchParams(searchParams.toString());
+    if (categorySlug) {
+      updatedParams.set('category', categorySlug);
+    } else {
+      updatedParams.delete('category');
+    }
+    updatedParams.delete('page'); // Reset page
+    router.push(`${pathname}?${updatedParams.toString()}`, { scroll: false });
   };
 
   // Handle sort change
@@ -117,6 +131,12 @@ function ProductsContent() {
       sort,
       page: 1, // Reset to first page
     }));
+
+    // Update URL
+    const updatedParams = new URLSearchParams(searchParams.toString());
+    updatedParams.set('sort', sort);
+    updatedParams.delete('page'); // Reset page
+    router.push(`${pathname}?${updatedParams.toString()}`, { scroll: false });
   };
 
   // Handle pagination
@@ -125,6 +145,15 @@ function ProductsContent() {
       ...prev,
       page,
     }));
+
+    // Update URL
+    const updatedParams = new URLSearchParams(searchParams.toString());
+    if (page > 1) {
+      updatedParams.set('page', page.toString());
+    } else {
+      updatedParams.delete('page');
+    }
+    router.push(`${pathname}?${updatedParams.toString()}`, { scroll: false });
   };
 
   // Get primary image URL

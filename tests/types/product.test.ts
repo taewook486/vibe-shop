@@ -186,7 +186,7 @@ describe('Product Types', () => {
       id: '550e8400-e29b-41d4-a716-446655440000',
       product_id: '550e8400-e29b-41d4-a716-446655440001',
       url: 'https://example.com/image.jpg',
-      alt_text: 'Test image',
+      alt: 'Test image',
       sort_order: 0,
       is_primary: true,
       created_at: '2024-01-25T10:00:00Z',
@@ -196,9 +196,9 @@ describe('Product Types', () => {
       expect(productImageSchema.parse(validImage)).toEqual(validImage);
     });
 
-    it('should accept null alt_text', () => {
-      const image = { ...validImage, alt_text: null };
-      expect(productImageSchema.parse(image).alt_text).toBeNull();
+    it('should accept null alt', () => {
+      const image = { ...validImage, alt: null };
+      expect(productImageSchema.parse(image).alt).toBeNull();
     });
 
     it('should reject invalid url', () => {

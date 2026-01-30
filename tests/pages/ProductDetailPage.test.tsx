@@ -58,7 +58,7 @@ const mockProduct: ProductWithAll = {
       id: 'img-1',
       product_id: 'product-1',
       url: 'https://example.com/image1.jpg',
-      alt_text: 'Next.js Guide Cover',
+      alt: 'Next.js Guide Cover',
       sort_order: 0,
       is_primary: true,
       created_at: '2024-01-01T00:00:00Z',
@@ -67,7 +67,7 @@ const mockProduct: ProductWithAll = {
       id: 'img-2',
       product_id: 'product-1',
       url: 'https://example.com/image2.jpg',
-      alt_text: 'Next.js Guide Preview',
+      alt: 'Next.js Guide Preview',
       sort_order: 1,
       is_primary: false,
       created_at: '2024-01-01T00:00:00Z',
@@ -130,7 +130,7 @@ describe('ProductDetailPage', () => {
     MockImageGallery.mockImplementation(({ images }: any) => (
       <div data-testid="image-gallery">
         {images.map((img: any) => (
-          <img key={img.id} src={img.url} alt={img.alt_text || ''} />
+          <img key={img.id} src={img.url} alt={img.alt || ''} />
         ))}
       </div>
     ));

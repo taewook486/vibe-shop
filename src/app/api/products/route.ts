@@ -64,7 +64,7 @@ export async function GET(request: NextRequest) {
         product_images (
           id,
           url,
-          alt_text,
+          alt,
           is_primary,
           sort_order
         )
@@ -147,7 +147,7 @@ export async function GET(request: NextRequest) {
         images: images.map((img: any) => ({
           id: img.id,
           url: img.url,
-          alt_text: img.alt_text,
+          alt: img.alt,
           is_primary: img.is_primary,
           sort_order: img.sort_order,
         })),

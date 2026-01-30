@@ -76,7 +76,7 @@ export async function GET(request: Request, { params }: RouteParams) {
         product_images (
           id,
           url,
-          alt_text,
+          alt,
           is_primary
         )
       `
@@ -109,7 +109,7 @@ export async function GET(request: Request, { params }: RouteParams) {
           ? {
               id: primaryImage.id,
               url: primaryImage.url,
-              alt_text: primaryImage.alt_text,
+              alt: primaryImage.alt,
             }
           : null,
         product_images: undefined, // 원본 이미지 배열 제거 (불필요한 데이터)

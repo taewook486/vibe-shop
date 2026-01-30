@@ -82,7 +82,7 @@ export default function ProductDetailPage({ params }: ProductDetailPageProps) {
       id: img.id || crypto.randomUUID(),
       product_id: img.product_id || product.id,
       url: img.url,
-      alt_text: img.alt_text || product.name,
+      alt: img.alt || product.name,
       sort_order: img.sort_order || 0,
       is_primary: img.is_primary || false,
       created_at: img.created_at || product.created_at,

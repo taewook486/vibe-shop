@@ -61,7 +61,7 @@ export interface ProductImage {
   id: string;
   product_id: string;
   url: string;
-  alt_text: string | null;
+  alt: string | null;
   sort_order: number;
   is_primary: boolean;
   created_at: string;
@@ -209,7 +209,7 @@ export const productImageSchema = z.object({
   id: z.string().uuid(),
   product_id: z.string().uuid(),
   url: z.string().url(),
-  alt_text: z.string().max(200).nullable(),
+  alt: z.string().max(200).nullable(),
   sort_order: z.number().int().min(0),
   is_primary: z.boolean(),
   created_at: z.string().datetime(),

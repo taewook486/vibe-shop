@@ -69,7 +69,7 @@ export function ImageGallery({ images }: ImageGalleryProps) {
       >
         <Image
           src={selectedImage.url}
-          alt={selectedImage.alt_text || `Product image ${selectedIndex + 1}`}
+          alt={selectedImage.alt || `Product image ${selectedIndex + 1}`}
           fill
           className={cn(
             'object-cover transition-transform duration-300',
@@ -123,7 +123,7 @@ export function ImageGallery({ images }: ImageGalleryProps) {
             >
               <Image
                 src={image.url}
-                alt={`Thumbnail ${index + 1}: ${image.alt_text || 'Product image'}`}
+                alt={`Thumbnail ${index + 1}: ${image.alt || 'Product image'}`}
                 fill
                 className="object-cover"
                 sizes="80px"
