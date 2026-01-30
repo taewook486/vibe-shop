@@ -61,7 +61,7 @@ export async function GET(request: NextRequest) {
       .from('products')
       .select(`
         *,
-        product_images (
+        product_images!inner (
           id,
           url,
           alt,

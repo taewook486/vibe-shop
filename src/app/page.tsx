@@ -64,7 +64,7 @@ export default function Home() {
             </div>
 
             {/* 기능 2 */}
-            <div className="bg-neo-white border-3 border-neo-black shadow-neo hover:translate-x-[-2px] hover:translate-y-[-2px] hover:shadow-neo-lg transition-all duration-200 p-8">
+            <div className="bg-neo-white border-3 border-neo-black shadow-neo hover:translate-x-[-2px] hover:translate-y-[-2px] hover:shadow-neo-lg transition-all duration-200 p-8" data-testid="feature-card">
               <div className="w-16 h-16 flex items-center justify-center bg-neo-pink border-3 border-neo-black shadow-neo-sm">
                 <Zap className="w-8 h-8 text-white" strokeWidth={2.5} />
               </div>
@@ -77,7 +77,7 @@ export default function Home() {
             </div>
 
             {/* 기능 3 */}
-            <div className="bg-neo-white border-3 border-neo-black shadow-neo hover:translate-x-[-2px] hover:translate-y-[-2px] hover:shadow-neo-lg transition-all duration-200 p-8">
+            <div className="bg-neo-white border-3 border-neo-black shadow-neo hover:translate-x-[-2px] hover:translate-y-[-2px] hover:shadow-neo-lg transition-all duration-200 p-8" data-testid="feature-card">
               <div className="w-16 h-16 flex items-center justify-center bg-neo-lime border-3 border-neo-black shadow-neo-sm">
                 <Download className="w-8 h-8 text-neo-black" strokeWidth={2.5} />
               </div>
