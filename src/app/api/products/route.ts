@@ -166,14 +166,6 @@ export async function GET(request: NextRequest) {
       }
     }
 
-    if (error) {
-      console.error('Products fetch error:', error);
-      return NextResponse.json(
-        { error: { code: 'FETCH_ERROR', message: error.message } },
-        { status: 500 }
-      );
-    }
-
     // 응답 생성 - 이미지 처리
     const productsWithImages = (products || []).map((p: any) => {
       const images = imagesMap[p.id] || [];
