@@ -56,13 +56,10 @@ export async function GET(request: NextRequest) {
       }
     }
 
-    // 쿼리 빌더 시작 - 이미지 포함
+    // 쿼리 빌더 시작 - 이미지를 제외하고 제품만 먼저 가져오기
     let query = supabase
       .from('products')
-      .select(`
-        *,
-        product_images (*)
-      `, { count: 'exact' })
+      .select('*', { count: 'exact' })
       .eq('status', 'active');
 
     // 필터 적용
@@ -127,9 +124,59 @@ export async function GET(request: NextRequest) {
       );
     }
 
+    // 별도로 이미지 가져오기 (alt/alt_text 컬럼 문제 회피)
+    const productIds = (products || []).map((p: any) => p.id);
+    let imagesMap: Record<string, any[]> = {};
+
+    if (productIds.length > 0) {
+      try {
+        // 각 제품별 이미지를 개별 조회
+        const imagesPromises = productIds.map(async (productId) => {
+          // Try alt_text column first (production)
+          let { data: images, error } = await supabase
+            .from('product_images')
+            .select('*')
+            .eq('product_id', productId);
+
+          // If error, try without specifying columns (wildcard)
+          if (error) {
+            // Just get all columns and handle in mapping
+            const { data: imagesData } = await supabase
+              .from('product_images')
+              .select('*')
+              .eq('product_id', productId);
+
+            images = imagesData || [];
+          }
+
+          return { productId, images: images || [] };
+        });
+
+        const imagesResults = await Promise.all(imagesPromises);
+
+        // Create map for quick lookup
+        imagesMap = imagesResults.reduce((acc, { productId, images }) => {
+          acc[productId] = images;
+          return acc;
+        }, {} as Record<string, any[]>);
+      } catch (err) {
+        console.error('Failed to fetch images:', err);
+        // Continue without images
+        imagesMap = {};
+      }
+    }
+
+    if (error) {
+      console.error('Products fetch error:', error);
+      return NextResponse.json(
+        { error: { code: 'FETCH_ERROR', message: error.message } },
+        { status: 500 }
+      );
+    }
+
     // 응답 생성 - 이미지 처리
     const productsWithImages = (products || []).map((p: any) => {
-      const images = p.product_images || [];
+      const images = imagesMap[p.id] || [];
       // 대표 이미지 찾기 (is_primary=true 또는 첫번째 이미지)
       const primaryImage = images.find((img: any) => img.is_primary) || images[0];
 
@@ -141,12 +188,10 @@ export async function GET(request: NextRequest) {
         images: images.map((img: any) => ({
           id: img.id,
           url: img.url,
-          alt: img.alt_text || img.alt, // Support both alt_text and alt
+          alt: img.alt_text || img.alt || '', // Support both alt_text and alt
           is_primary: img.is_primary,
           sort_order: img.sort_order,
         })),
-        // product_images 원본 필드 제거
-        product_images: undefined,
       };
     });
 
