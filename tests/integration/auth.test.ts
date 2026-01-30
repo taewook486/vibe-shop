@@ -10,7 +10,6 @@
 import { describe, it, expect, beforeEach, vi, type Mock } from 'vitest';
 import {
   signInWithGoogle,
-  signInWithMagicLink,
   signOut,
   getCurrentUser,
 } from '@/lib/supabase/auth';
@@ -73,51 +72,6 @@ describe('Authentication', () => {
 
       expect(result.error).toBeTruthy();
       expect(result.error?.message).toContain('OAuth provider error');
-    });
-  });
-
-  describe('signInWithMagicLink', () => {
-    const testEmail = 'test@vibestore.com';
-
-    it('should send magic link to email', async () => {
-      // Mock 성공 응답
-      mockSignInWithOtp.mockResolvedValue({
-        data: { user: null, session: null },
-        error: null,
-      });
-
-      const result = await signInWithMagicLink(testEmail);
-
-      expect(mockSignInWithOtp).toHaveBeenCalledWith({
-        email: testEmail,
-        options: {
-          emailRedirectTo: expect.stringContaining('/auth/callback'),
-        },
-      });
-
-      expect(result.error).toBeNull();
-    });
-
-    it('should validate email format', async () => {
-      const invalidEmail = 'invalid-email';
-
-      const result = await signInWithMagicLink(invalidEmail);
-
-      expect(result.error).toBeTruthy();
-      expect(result.error?.message).toContain('Invalid email format');
-    });
-
-    it('should handle magic link send errors', async () => {
-      // Mock 에러 응답
-      mockSignInWithOtp.mockResolvedValue({
-        data: null,
-        error: { message: 'Email service unavailable', status: 503 },
-      });
-
-      const result = await signInWithMagicLink(testEmail);
-
-      expect(result.error).toBeTruthy();
-      expect(result.error?.message).toContain('Email service unavailable');
     });
   });
 

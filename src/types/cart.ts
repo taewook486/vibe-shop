@@ -12,7 +12,7 @@ export interface CartItem {
     name: string;
     price: number;
     discount_price: number | null;
-    thumbnail_url: string;
+    thumbnail_url: string | null;
   };
 }
 

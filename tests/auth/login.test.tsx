@@ -228,7 +228,7 @@ describe('Login Page', () => {
       // 비밀번호 표시 버튼 클릭
       const toggleButtons = screen.getAllByRole('button');
       const toggleButton = toggleButtons.find(
-        (btn) => btn.querySelector('svg') && btn.type === 'button'
+        (btn) => btn.querySelector('svg') !== null
       );
 
       if (toggleButton) {

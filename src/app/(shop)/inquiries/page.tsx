@@ -8,7 +8,6 @@ import { Plus, Search, MessageCircle, Clock, CheckCircle } from 'lucide-react';
 import { InquiryCard } from '@/components/inquiries/inquiry-card';
 import {
   INQUIRY_CATEGORIES,
-  INQUIRY_SORT_OPTIONS,
   type InquiryCategoryType,
   type InquiryStatusType,
 } from '@/types/inquiry';
@@ -52,21 +51,26 @@ export default async function InquiriesPage({ searchParams }: InquiriesPageProps
       signal: controller.signal,
     });
     clearTimeout(timeoutId);
-  } catch (fetchError: any) {
-    if (fetchError.name === 'AbortError') {
+  } catch (fetchError: unknown) {
+    if (fetchError instanceof Error && fetchError.name === 'AbortError') {
       // 타임아웃 시 빈 데이터 반환
-      response = { ok: false, status: 408, statusText: 'Request Timeout' } as any;
+      response = { ok: false, status: 408, statusText: 'Request Timeout' } as Response;
     } else {
       throw fetchError;
     }
   }
 
+  let inquiries: unknown[] = [];
+  let pagination = { total: 0, totalPages: 1 };
+
   if (!response.ok) {
     // 타임아웃 등 에러 발생 시 빈 데이터로 정상 페이지 렌더링
-    const { inquiries, pagination } = { inquiries: [], pagination: { total: 0, totalPages: 1 } };
+    inquiries = [];
+    pagination = { total: 0, totalPages: 1 };
   } else {
     const data = await response.json();
-    var { inquiries, pagination } = data || { inquiries: [], pagination: { total: 0, totalPages: 1 } };
+    inquiries = data?.inquiries || [];
+    pagination = data?.pagination || { total: 0, totalPages: 1 };
   }
 
   return (
@@ -205,8 +209,8 @@ export default async function InquiriesPage({ searchParams }: InquiriesPageProps
             </div>
           ) : (
             <div className="space-y-4">
-              {inquiries.map((inquiry: any) => (
-                <InquiryCard key={inquiry.id} inquiry={inquiry} />
+              {inquiries.map((inquiry: unknown) => (
+                <InquiryCard key={(inquiry as { id: string }).id} inquiry={inquiry as Record<string, unknown>} />
               ))}
             </div>
           )}

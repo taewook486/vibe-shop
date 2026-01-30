@@ -11,7 +11,7 @@
  */
 
 import { notFound } from 'next/navigation';
-import { createServerClient, createAdminClient } from '@/lib/supabase/server';
+import { createAdminClient } from '@/lib/supabase/server';
 import UserDetail from '@/components/admin/user-detail';
 import { Button } from '@/components/ui/button';
 import { ArrowLeft } from 'lucide-react';
@@ -31,10 +31,7 @@ export default async function AdminUserDetailPage({
 
   const { id: userId } = await params;
 
-  // 1. Supabase 클라이언트 생성 (DB 접근용)
-  const supabase = await createServerClient();
-
-  // 2. Admin 클라이언트로 사용자 정보 조회
+  // Admin 클라이언트로 사용자 정보 조회
   const adminSupabase = createAdminClient();
 
   const { data: profile, error: profileError } = await adminSupabase

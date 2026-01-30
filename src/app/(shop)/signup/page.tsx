@@ -78,7 +78,7 @@ export default function SignupPage() {
         // 로그인 성공 시 홈으로 리다이렉트
         router.push('/');
       }
-    } catch (err) {
+    } catch {
       setError('회원가입 중 오류가 발생했습니다');
     } finally {
       setIsLoading(false);

@@ -4,8 +4,6 @@
  * 모든 테스트 실행 전 초기화
  */
 
-import { beforeAll, vi } from 'vitest';
-import '@testing-library/jest-dom';
 import { config } from 'dotenv';
 
 // .env.local 로드 (실제 Supabase 연결용)

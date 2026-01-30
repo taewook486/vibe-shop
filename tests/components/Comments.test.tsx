@@ -308,7 +308,7 @@ describe('CommentForm', () => {
   });
 
   it('should call onSubmit with content', async () => {
-    const onSubmit = vi.fn().mockResolvedValue(undefined);
+    const onSubmit = vi.fn().mockResolvedValue(undefined as void);
     const user = userEvent.setup();
 
     render(
@@ -426,7 +426,7 @@ describe('CommentForm', () => {
   });
 
   it('should disable submit button while submitting', async () => {
-    const onSubmit = vi.fn(() => new Promise((resolve) => setTimeout(resolve, 100)));
+    const onSubmit = vi.fn(() => new Promise<void>((resolve) => setTimeout(resolve, 100)));
     const user = userEvent.setup();
 
     render(

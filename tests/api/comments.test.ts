@@ -324,7 +324,7 @@ describe('Comments API', () => {
         body: JSON.stringify({ content: 'Updated content' }),
       });
 
-      const response = await PATCH(request, { params: { id: testCommentId } });
+      const response = await PATCH(request, { params: Promise.resolve({ id: testCommentId }) });
       const data = await response.json();
 
       expect(response.status).toBe(200);
@@ -348,7 +348,7 @@ describe('Comments API', () => {
         body: JSON.stringify({ content: 'Unauthorized' }),
       });
 
-      const response = await PATCH(request, { params: { id: testCommentId } });
+      const response = await PATCH(request, { params: Promise.resolve({ id: testCommentId }) });
       expect(response.status).toBe(403);
     });
   });
@@ -385,7 +385,7 @@ describe('Comments API', () => {
         method: 'DELETE',
       });
 
-      const response = await DELETE(request, { params: { id: testCommentId } });
+      const response = await DELETE(request, { params: Promise.resolve({ id: testCommentId }) });
       const data = await response.json();
 
       expect(response.status).toBe(200);
@@ -432,7 +432,7 @@ describe('Comments API', () => {
         method: 'DELETE',
       });
 
-      const response = await DELETE(request, { params: { id: testCommentId } });
+      const response = await DELETE(request, { params: Promise.resolve({ id: testCommentId }) });
       const data = await response.json();
 
       expect(response.status).toBe(200);
@@ -455,7 +455,7 @@ describe('Comments API', () => {
         method: 'DELETE',
       });
 
-      const response = await DELETE(request, { params: { id: testCommentId } });
+      const response = await DELETE(request, { params: Promise.resolve({ id: testCommentId }) });
       expect(response.status).toBe(403);
     });
   });

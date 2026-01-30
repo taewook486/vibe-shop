@@ -1,0 +1,118 @@
+name: Research RAG Papers
+
+on:
+  schedule:
+    # Every Monday at 9:00 AM KST (00:00 UTC)
+    - cron: '0 0 * * 1'
+  workflow_dispatch:
+    inputs:
+      days:
+        description: 'Number of days to look back'
+        required: false
+        default: '7'
+        type: choice
+        options:
+          - '1'
+          - '7'
+          - '14'
+          - '30'
+
+jobs:
+  research-rag:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+
+      - name: Install Claude Code CLI
+        run: npm install -g @anthropic-ai/claude-code
+
+      - name: Create research directories
+        run: |
+          mkdir -p .moai/docs/research
+          mkdir -p .moai/cache
+
+      - name: Run RAG research workflow
+        env:
+          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+          DAYS: ${{ github.event.inputs.days || '7' }}
+        run: |
+          echo "Running research workflow for last $DAYS days..."
+
+          # Create temporary script to invoke Claude Code
+          cat > /tmp/research-rag.sh << 'EOF'
+          #!/bin/bash
+
+          # This script invokes the /research-rag command
+          # through Claude Code CLI with proper context
+
+          DAYS=${1:-7}
+
+          # Create the research prompt
+          cat > /tmp/research-prompt.txt << PROMPT
+Execute the /research-rag command with the following parameters:
+- Days to look back: $DAYS
+- Output directory: .moai/docs/research
+- Memory storage: enabled
+
+Please:
+1. Search arXiv for recent RAG papers
+2. Analyze and summarize findings
+3. Verify key equations with WolframAlpha
+4. Store results in Memory MCP
+5. Generate summary report
+PROMPT
+
+          # Execute via Claude Code (if CLI supports programmatic execution)
+          claude code --prompt-file /tmp/research-prompt.txt || \
+          echo "Note: Programmatic execution requires Claude Code with CLI extensions"
+
+          EOF
+
+          chmod +x /tmp/research-rag.sh
+          /tmp/research-rag.sh "$DAYS"
+
+      - name: Commit research findings
+        run: |
+          git config --local user.email "github-actions[bot]@users.noreply.github.com"
+          git config --local user.name "github-actions[bot]"
+
+          # Add research reports
+          git add .moai/docs/research/ || echo "No new research reports"
+          git add .moai/cache/arxiv-*.json 2>/dev/null || echo "No cache files"
+
+          # Commit if there are changes
+          if git diff --staged --quiet; then
+            echo "No changes to commit"
+          else
+            git commit -m "docs: weekly RAG research update $(date +%Y-%m-%d)"
+            git push
+          fi
+
+      - name: Upload research artifacts
+        uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: rag-research-${{ github.run_number }}
+          path: |
+            .moai/docs/research/
+            .moai/cache/arxiv-*.json
+          retention-days: 90
+
+      - name: Create summary
+        if: always()
+        run: |
+          echo "## RAG Research Summary" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "**Date:** $(date)" >> $GITHUB_STEP_SUMMARY
+          echo "**Days:** ${{ github.event.inputs.days || '7' }}" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "### Research Reports" >> $GITHUB_STEP_SUMMARY
+          echo '```' >> $GITHUB_STEP_SUMMARY
+          ls -lh .moai/docs/research/ 2>/dev/null || echo "No reports found"
+          echo '```' >> $GITHUB_STEP_SUMMARY

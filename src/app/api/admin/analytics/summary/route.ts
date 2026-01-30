@@ -11,13 +11,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { createServerClient } from '@/lib/supabase/server';
 
-interface SummaryQueryParams {
-  period?: 'day' | 'week' | 'month' | 'year';
-  startDate?: string;
-  endDate?: string;
-  compare?: boolean;
-}
-
 export async function GET(request: NextRequest) {
   try {
     const supabase = await createServerClient();

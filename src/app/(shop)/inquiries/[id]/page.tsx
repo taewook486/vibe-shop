@@ -19,7 +19,7 @@ import Link from 'next/link';
 import Image from 'next/image';
 import { formatDistanceToNow } from 'date-fns';
 import { ko } from 'date-fns/locale';
-import { ArrowLeft, Lock, Eye, MessageCircle, Clock, User } from 'lucide-react';
+import { ArrowLeft, Lock, Eye, MessageCircle, Clock } from 'lucide-react';
 import {
   INQUIRY_CATEGORIES,
   INQUIRY_STATUS,

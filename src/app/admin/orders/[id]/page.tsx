@@ -6,7 +6,6 @@
  * - 주문 상태 변경
  */
 
-import { notFound } from 'next/navigation';
 import Link from 'next/link';
 import { OrderStatusBadge } from '@/components/admin/order-status-badge';
 import { Button } from '@/components/ui/button';

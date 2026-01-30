@@ -446,7 +446,7 @@ describe('DELETE /api/admin/products/[id] - 상품 삭제 (Soft delete)', () => 
       .eq('id', testProductId)
       .single();
 
-    expect(product.status).toBe('archived');
+    expect(product?.status).toBe('archived');
   });
 });
 

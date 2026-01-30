@@ -18,7 +18,7 @@ const createCategorySchema = z.object({
  * GET /api/admin/categories
  * 관리자용 카테고리 전체 목록 조회
  */
-export async function GET(request: NextRequest) {
+export async function GET() {
   try {
     const supabase = await createServerClient();
 

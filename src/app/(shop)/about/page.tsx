@@ -3,7 +3,7 @@
  * 쇼핑몰 소개 페이지
  */
 
-import { Store, Shield, Truck, Headphones, Star, Gift } from 'lucide-react';
+import { Shield, Truck, Headphones, Star, Gift } from 'lucide-react';
 import Link from 'next/link';
 
 export default function AboutPage() {

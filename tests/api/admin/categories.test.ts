@@ -10,7 +10,14 @@
  */
 
 import { describe, it, expect, beforeAll, afterAll, beforeEach } from 'vitest';
-import { createClient } from '@supabase/supabase-js';
+import { createClient, type SupabaseClient } from '@supabase/supabase-js';
+import type { Database } from '../../../src/types/database.types';
+
+type Category = Database['public']['Tables']['categories']['Row'];
+type CategoryInsert = Database['public']['Tables']['categories']['Insert'];
+
+// Typed Supabase client for tests
+type TypedSupabaseClient = SupabaseClient<Database>;
 
 // Test setup
 const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
@@ -20,7 +27,7 @@ const supabaseServiceKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
 const shouldSkip = !supabaseUrl || !supabaseServiceKey;
 
 describe.skipIf(shouldSkip)('Admin Categories API - Database Integration', () => {
-  let supabase: ReturnType<typeof createClient>;
+  let supabase: TypedSupabaseClient;
   let adminUserId: string;
   let regularUserId: string;
   let testCategoryIds: string[] = [];
@@ -43,7 +50,7 @@ describe.skipIf(shouldSkip)('Admin Categories API - Database Integration', () =>
     // Set admin role in profiles
     const { error: profileError } = await supabase
       .from('profiles')
-      .update({ role: 'admin' })
+      .update({ role: 'admin' as const })
       .eq('id', adminUserId);
 
     if (profileError) throw profileError;
@@ -98,9 +105,10 @@ describe.skipIf(shouldSkip)('Admin Categories API - Database Integration', () =>
 
       const { data, error } = await supabase
         .from('categories')
-        .insert(categoryData)
+        .insert(categoryData as CategoryInsert)
         .select()
-        .single();
+        .single()
+        .returns<Category | null>();
 
       expect(error).toBeNull();
       expect(data).toBeDefined();
@@ -120,9 +128,10 @@ describe.skipIf(shouldSkip)('Admin Categories API - Database Integration', () =>
           slug: 'parent-category',
           sort_order: 1,
           is_active: true,
-        })
+        } as CategoryInsert)
         .select()
-        .single();
+        .single()
+        .returns<Category | null>();
 
       expect(parent).toBeDefined();
       if (parent?.id) testCategoryIds.push(parent.id);
@@ -136,9 +145,10 @@ describe.skipIf(shouldSkip)('Admin Categories API - Database Integration', () =>
           parent_id: parent!.id,
           sort_order: 1,
           is_active: true,
-        })
+        } as CategoryInsert)
         .select()
-        .single();
+        .single()
+        .returns<Category | null>();
 
       expect(child).toBeDefined();
       expect(child?.parent_id).toBe(parent!.id);
@@ -153,8 +163,9 @@ describe.skipIf(shouldSkip)('Admin Categories API - Database Integration', () =>
           { name: 'Category A', slug: 'category-a', sort_order: 2, is_active: true },
           { name: 'Category B', slug: 'category-b', sort_order: 1, is_active: true },
           { name: 'Category C', slug: 'category-c', sort_order: 3, is_active: true },
-        ])
-        .select();
+        ] as CategoryInsert[])
+        .select()
+        .returns<Array<Category>>();
 
       if (inserted) {
         testCategoryIds.push(...inserted.map((c) => c.id));
@@ -163,13 +174,17 @@ describe.skipIf(shouldSkip)('Admin Categories API - Database Integration', () =>
       const { data } = await supabase
         .from('categories')
         .select('*')
-        .order('sort_order', { ascending: true });
+        .order('sort_order', { ascending: true })
+        .returns<Array<Category>>();
 
       expect(data).toBeDefined();
-      expect(data!.length).toBeGreaterThanOrEqual(3);
+      if (!data) {
+        throw new Error('data should not be null');
+      }
+      expect(data.length).toBeGreaterThanOrEqual(3);
 
       // Check if sorted correctly
-      const ourCategories = data!.filter((c) => testCategoryIds.includes(c.id));
+      const ourCategories = data.filter((c) => testCategoryIds.includes(c.id));
       expect(ourCategories[0].name).toBe('Category B');
       expect(ourCategories[1].name).toBe('Category A');
       expect(ourCategories[2].name).toBe('Category C');
@@ -184,9 +199,10 @@ describe.skipIf(shouldSkip)('Admin Categories API - Database Integration', () =>
           slug: 'original-slug',
           sort_order: 1,
           is_active: true,
-        })
+        } as CategoryInsert)
         .select()
-        .single();
+        .single()
+        .returns<Category | null>();
 
       if (created?.id) testCategoryIds.push(created.id);
 
@@ -200,7 +216,8 @@ describe.skipIf(shouldSkip)('Admin Categories API - Database Integration', () =>
         })
         .eq('id', created!.id)
         .select()
-        .single();
+        .single()
+        .returns<Category | null>();
 
       expect(error).toBeNull();
       expect(updated?.name).toBe('Updated Name');
@@ -217,9 +234,10 @@ describe.skipIf(shouldSkip)('Admin Categories API - Database Integration', () =>
           slug: 'parent-for-delete',
           sort_order: 1,
           is_active: true,
-        })
+        } as CategoryInsert)
         .select()
-        .single();
+        .single()
+        .returns<Category | null>();
 
       if (parent?.id) testCategoryIds.push(parent.id);
 
@@ -231,9 +249,10 @@ describe.skipIf(shouldSkip)('Admin Categories API - Database Integration', () =>
           parent_id: parent!.id,
           sort_order: 1,
           is_active: true,
-        })
+        } as CategoryInsert)
         .select()
-        .single();
+        .single()
+        .returns<Category | null>();
 
       if (child?.id) testCategoryIds.push(child.id);
 
@@ -241,10 +260,13 @@ describe.skipIf(shouldSkip)('Admin Categories API - Database Integration', () =>
       const { data: children } = await supabase
         .from('categories')
         .select('id')
-        .eq('parent_id', parent!.id);
+        .eq('parent_id', parent!.id)
+        .returns<Array<{ id: string }>>();
 
       expect(children).toBeDefined();
-      expect(children!.length).toBeGreaterThan(0);
+      if (children) {
+        expect(children.length).toBeGreaterThan(0);
+      }
     });
 
     it('should delete category without children', async () => {
@@ -255,9 +277,10 @@ describe.skipIf(shouldSkip)('Admin Categories API - Database Integration', () =>
           slug: 'to-delete',
           sort_order: 1,
           is_active: true,
-        })
+        } as CategoryInsert)
         .select()
-        .single();
+        .single()
+        .returns<Category | null>();
 
       const categoryId = created!.id;
 
@@ -270,7 +293,8 @@ describe.skipIf(shouldSkip)('Admin Categories API - Database Integration', () =>
         .from('categories')
         .select()
         .eq('id', categoryId)
-        .single();
+        .single()
+        .returns<Category | null>();
 
       expect(deleted).toBeNull();
     });
@@ -288,9 +312,10 @@ describe.skipIf(shouldSkip)('Admin Categories API - Database Integration', () =>
           slug,
           sort_order: 1,
           is_active: true,
-        })
+        } as CategoryInsert)
         .select()
-        .single();
+        .single()
+        .returns<Category | null>();
 
       if (first?.id) testCategoryIds.push(first.id);
 
@@ -302,9 +327,10 @@ describe.skipIf(shouldSkip)('Admin Categories API - Database Integration', () =>
           slug,
           sort_order: 2,
           is_active: true,
-        })
+        } as CategoryInsert)
         .select()
-        .single();
+        .single()
+        .returns<Category | null>();
 
       expect(error).toBeDefined();
       expect(error?.code).toBe('23505'); // Unique violation
@@ -319,9 +345,10 @@ describe.skipIf(shouldSkip)('Admin Categories API - Database Integration', () =>
           parent_id: null,
           sort_order: 1,
           is_active: true,
-        })
+        } as CategoryInsert)
         .select()
-        .single();
+        .single()
+        .returns<Category | null>();
 
       expect(error).toBeNull();
       expect(data?.parent_id).toBeNull();
@@ -337,8 +364,9 @@ describe.skipIf(shouldSkip)('Admin Categories API - Database Integration', () =>
         .insert([
           { name: 'Active Cat', slug: 'active-cat', is_active: true, sort_order: 1 },
           { name: 'Inactive Cat', slug: 'inactive-cat', is_active: false, sort_order: 2 },
-        ])
-        .select();
+        ] as CategoryInsert[])
+        .select()
+        .returns<Array<Category>>();
 
       if (inserted) {
         testCategoryIds.push(...inserted.map((c) => c.id));
@@ -353,10 +381,13 @@ describe.skipIf(shouldSkip)('Admin Categories API - Database Integration', () =>
       // Create client with admin session
       const adminClient = createClient(supabaseUrl!, supabaseServiceKey!);
 
-      const { data } = await adminClient.from('categories').select('*');
+      const { data } = await adminClient.from('categories').select('*').returns<Array<Category>>();
 
       expect(data).toBeDefined();
-      expect(data!.length).toBeGreaterThanOrEqual(2);
+      if (!data) {
+        throw new Error('data should not be null');
+      }
+      expect(data.length).toBeGreaterThanOrEqual(2);
     });
   });
 
@@ -369,9 +400,10 @@ describe.skipIf(shouldSkip)('Admin Categories API - Database Integration', () =>
           slug: 'category-sort',
           sort_order: 5,
           is_active: true,
-        })
+        } as CategoryInsert)
         .select()
-        .single();
+        .single()
+        .returns<Category | null>();
 
       if (created?.id) testCategoryIds.push(created.id);
 
@@ -380,7 +412,8 @@ describe.skipIf(shouldSkip)('Admin Categories API - Database Integration', () =>
         .update({ sort_order: 10 })
         .eq('id', created!.id)
         .select()
-        .single();
+        .single()
+        .returns<Category | null>();
 
       expect(updated?.sort_order).toBe(10);
     });

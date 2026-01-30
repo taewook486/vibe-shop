@@ -29,6 +29,7 @@ const mockProducts: Product[] = [
     slug: 'test-product-1',
     description: 'Test description 1',
     price: 10000,
+    discount_price: null,
     category_id: 'cat-1',
     images: ['img1.jpg'],
     status: 'active',
@@ -42,6 +43,7 @@ const mockProducts: Product[] = [
     slug: 'test-product-2',
     description: 'Test description 2',
     price: 20000,
+    discount_price: null,
     category_id: 'cat-1',
     images: ['img2.jpg'],
     status: 'active',
@@ -53,22 +55,8 @@ const mockProducts: Product[] = [
 
 const mockProductWithAll: ProductWithAll = {
   ...mockProducts[0],
-  category: {
-    id: 'cat-1',
-    name: 'Test Category',
-    slug: 'test-category',
-    created_at: '2025-01-01T00:00:00Z',
-  },
-  variants: [
-    {
-      id: 'var-1',
-      product_id: '1',
-      name: 'Size M',
-      price_adjustment: 0,
-      stock: 5,
-      created_at: '2025-01-01T00:00:00Z',
-    },
-  ],
+  files: [],
+  tags: [],
 };
 
 describe('useProducts', () => {
@@ -332,9 +320,8 @@ describe('useProduct', () => {
       expect(result.current.isLoading).toBe(false);
     });
 
-    expect(result.current.product?.category).toBeDefined();
-    expect(result.current.product?.variants).toBeDefined();
-    expect(result.current.product?.variants).toHaveLength(1);
+    expect(result.current.product?.files).toBeDefined();
+    expect(result.current.product?.tags).toBeDefined();
   });
 
   it('mutate 함수를 제공해야 함', async () => {

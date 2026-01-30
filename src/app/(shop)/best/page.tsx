@@ -20,7 +20,7 @@ import type { Product } from '@/types/product';
 /**
  * 상품 썸네일 추출 헬퍼
  */
-const getProductThumbnail = (product: Product & { images?: Array<{ url: string } | string>; thumbnail?: string }): string | undefined => {
+const getProductThumbnail = (product: Product & { images?: Array<{ url: string } | string>; thumbnail?: string | null }): string | undefined => {
   // API에서 직접 thumbnail 필드를 제공하는 경우
   if (product.thumbnail) {
     return product.thumbnail;

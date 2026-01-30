@@ -26,7 +26,7 @@ describe('UsersList Component', () => {
       email: 'test@example.com',
       nickname: 'Test User',
       avatar_url: null,
-      role: 'user',
+      role: 'customer',
       grade: 'bronze',
       points: 100,
       total_order_amount: 50000,

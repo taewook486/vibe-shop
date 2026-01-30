@@ -7,7 +7,7 @@
  */
 
 import { Suspense } from 'react';
-import { createServerClient, createAdminClient } from '@/lib/supabase/server';
+import { createAdminClient } from '@/lib/supabase/server';
 import UsersList from '@/components/admin/users-list';
 import { Users } from 'lucide-react';
 import type { AdminUser } from '@/types/admin';

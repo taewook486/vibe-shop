@@ -150,14 +150,12 @@ describe('Analytics API - Summary', () => {
 });
 
 describe('Analytics API - Products', () => {
-  let adminUserId: string;
-
   it('GET /products - 상품별 매출 순위', async () => {
     const response = await fetch(
       'http://localhost:3000/api/admin/analytics/products?limit=10',
       {
         headers: {
-          'X-User-Id': adminUserId || 'test-admin',
+          'X-User-Id': 'test-admin',
         },
       }
     );

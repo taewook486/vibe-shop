@@ -6,11 +6,27 @@
 
 import { describe, it, expect, vi, beforeEach } from 'vitest';
 import { POST } from '@/app/api/auth/change-password/route';
+import type { Session } from 'next-auth';
 
 // Mock dependencies
 vi.mock('@/lib/auth', () => ({
   auth: vi.fn(),
 }));
+
+// Helper to create a mock session
+function createMockSession(overrides?: Partial<Session>): Session {
+  return {
+    user: {
+      id: 'user-123',
+      email: 'test@example.com',
+      name: 'Test User',
+      image: null,
+      role: 'customer',
+    },
+    expires: new Date(Date.now() + 3600000).toISOString(),
+    ...overrides,
+  } as Session;
+}
 
 vi.mock('@/lib/supabase/server', () => ({
   createAdminClient: vi.fn(),
@@ -26,7 +42,7 @@ describe('POST /api/auth/change-password', () => {
 
   it('should return 401 if not authenticated', async () => {
     // Mock: No session
-    vi.mocked(auth).mockResolvedValue(null);
+    (auth as unknown as ReturnType<typeof vi.fn>).mockResolvedValue(null as Session | null);
 
     const request = new Request('http://localhost:3000/api/auth/change-password', {
       method: 'POST',
@@ -42,10 +58,7 @@ describe('POST /api/auth/change-password', () => {
 
   it('should return 400 if password is too short', async () => {
     // Mock: Valid session
-    vi.mocked(auth).mockResolvedValue({
-      user: { id: 'user-123', email: 'test@example.com', role: 'customer' },
-      expires: new Date(Date.now() + 3600000).toISOString(),
-    });
+    (auth as unknown as ReturnType<typeof vi.fn>).mockResolvedValue(createMockSession());
 
     const request = new Request('http://localhost:3000/api/auth/change-password', {
       method: 'POST',
@@ -61,10 +74,7 @@ describe('POST /api/auth/change-password', () => {
 
   it('should successfully change password', async () => {
     // Mock: Valid session
-    vi.mocked(auth).mockResolvedValue({
-      user: { id: 'user-123', email: 'test@example.com', role: 'customer' },
-      expires: new Date(Date.now() + 3600000).toISOString(),
-    });
+    (auth as unknown as ReturnType<typeof vi.fn>).mockResolvedValue(createMockSession());
 
     // Mock: Supabase admin client
     const mockUpdateUserById = vi.fn().mockResolvedValue({ error: null });
@@ -93,10 +103,7 @@ describe('POST /api/auth/change-password', () => {
 
   it('should return 500 if Supabase update fails', async () => {
     // Mock: Valid session
-    vi.mocked(auth).mockResolvedValue({
-      user: { id: 'user-123', email: 'test@example.com', role: 'customer' },
-      expires: new Date(Date.now() + 3600000).toISOString(),
-    });
+    (auth as unknown as ReturnType<typeof vi.fn>).mockResolvedValue(createMockSession());
 
     // Mock: Supabase error
     const mockUpdateUserById = vi.fn().mockResolvedValue({

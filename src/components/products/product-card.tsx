@@ -8,7 +8,7 @@ import type { Product } from '@/types/product';
 
 interface ProductCardProps {
   product: Product;
-  thumbnail?: string;
+  thumbnail?: string | null;
 }
 
 // ============================================================================

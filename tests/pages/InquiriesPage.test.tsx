@@ -128,7 +128,7 @@ describe('Inquiries List Page', () => {
     });
 
     const InquiriesPage = (await import('@/app/(shop)/inquiries/page')).default;
-    render(await InquiriesPage({ searchParams: {} }));
+    render(await InquiriesPage({ searchParams: Promise.resolve({}) }));
 
     await waitFor(() => {
       expect(screen.getByText('상품 사이즈 문의')).toBeInTheDocument();
@@ -186,7 +186,7 @@ describe('Inquiries List Page', () => {
     });
 
     const InquiriesPage = (await import('@/app/(shop)/inquiries/page')).default;
-    render(await InquiriesPage({ searchParams: { category: 'product' } }));
+    render(await InquiriesPage({ searchParams: Promise.resolve({ category: 'product' }) }));
 
     await waitFor(() => {
       expect(screen.getByText('상품 문의')).toBeInTheDocument();
@@ -229,7 +229,7 @@ describe('Inquiries List Page', () => {
     });
 
     const InquiriesPage = (await import('@/app/(shop)/inquiries/page')).default;
-    render(await InquiriesPage({ searchParams: { status: 'pending' } }));
+    render(await InquiriesPage({ searchParams: Promise.resolve({ status: 'pending' }) }));
 
     await waitFor(() => {
       expect(screen.getByText('미답변 문의')).toBeInTheDocument();
@@ -287,7 +287,7 @@ describe('Inquiry Detail Page', () => {
     });
 
     const InquiryDetailPage = (await import('@/app/(shop)/inquiries/[id]/page')).default;
-    render(await InquiryDetailPage({ params: { id: 'inq-1' } }));
+    render(await InquiryDetailPage({ params: Promise.resolve({ id: 'inq-1' }) }));
 
     await waitFor(() => {
       expect(screen.getByText('상품 사이즈 문의')).toBeInTheDocument();
@@ -340,7 +340,7 @@ describe('Inquiry Detail Page', () => {
     });
 
     const InquiryDetailPage = (await import('@/app/(shop)/inquiries/[id]/page')).default;
-    render(await InquiryDetailPage({ params: { id: 'inq-1' } }));
+    render(await InquiryDetailPage({ params: Promise.resolve({ id: 'inq-1' }) }));
 
     await waitFor(() => {
       expect(screen.getByText('배송 문의')).toBeInTheDocument();
@@ -385,7 +385,7 @@ describe('Inquiry Creation Form', () => {
       });
 
     const InquiryNewPage = (await import('@/app/(shop)/inquiries/new/page')).default;
-    render(await InquiryNewPage({ searchParams: {} }));
+    render(await InquiryNewPage({ searchParams: Promise.resolve({}) }));
 
     await waitFor(() => {
       expect(screen.getByLabelText(/제목/)).toBeInTheDocument();
@@ -423,7 +423,7 @@ describe('Inquiry Creation Form', () => {
     });
 
     const InquiryNewPage = (await import('@/app/(shop)/inquiries/new/page')).default;
-    render(await InquiryNewPage({ searchParams: {} }));
+    render(await InquiryNewPage({ searchParams: Promise.resolve({}) }));
 
     await waitFor(() => {
       expect(screen.getByLabelText(/제목/)).toBeInTheDocument();

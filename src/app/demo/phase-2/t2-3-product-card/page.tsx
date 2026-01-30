@@ -20,6 +20,8 @@ const baseProduct: Product = {
   is_featured: false,
   view_count: 0,
   sales_count: 0,
+  stock: 100,
+  stock_alert_threshold: 10,
   created_at: '2026-01-25T00:00:00Z',
   updated_at: '2026-01-25T00:00:00Z',
 };

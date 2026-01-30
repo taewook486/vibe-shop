@@ -27,8 +27,9 @@ describe('Inquiries API', () => {
     const { data: user } = await supabase
       .from('profiles')
       .insert({
+        id: crypto.randomUUID(),
         email: 'inquiry-test@example.com',
-        role: 'user',
+        role: 'customer',
         nickname: 'Test User',
       })
       .select()
@@ -39,6 +40,7 @@ describe('Inquiries API', () => {
     const { data: admin } = await supabase
       .from('profiles')
       .insert({
+        id: crypto.randomUUID(),
         email: 'inquiry-admin@example.com',
         role: 'admin',
         nickname: 'Admin User',

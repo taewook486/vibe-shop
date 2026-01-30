@@ -68,8 +68,8 @@ describe('Orders API', () => {
     });
 
     it('타인 주문 조회 불가 (RLS)', () => {
-      const currentUserId = 'user-999';
-      const orderUserId = 'user-123';
+      const currentUserId: string = 'user-999';
+      const orderUserId: string = 'user-123';
 
       const canAccess = currentUserId === orderUserId;
       expect(canAccess).toBe(false);
@@ -86,15 +86,15 @@ describe('Orders API', () => {
     });
 
     it('금액 불일치 시 실패', () => {
-      const orderAmount = 10000;
-      const paymentAmount = 9000;
+      const orderAmount: number = 10000;
+      const paymentAmount: number = 9000;
 
       const isValid = orderAmount === paymentAmount;
       expect(isValid).toBe(false);
     });
 
     it('이미 결제된 주문 처리 방지', () => {
-      const orderStatus = 'paid';
+      const orderStatus = 'paid' as 'pending' | 'paid' | 'completed' | 'cancelled' | 'refunded';
       const isPending = orderStatus === 'pending';
 
       expect(isPending).toBe(false);
@@ -152,10 +152,11 @@ describe('Orders API', () => {
         })),
       };
 
-      (createServerClient as any).mockReturnValue(mockSupabase);
+      (createServerClient as any).mockResolvedValue(mockSupabase);
 
-      const supabase = createServerClient();
+      const supabase = await createServerClient();
       await supabase.from('orders').insert({
+        order_number: 'ORD-20260125-0001',
         user_id: 'user-123',
         status: 'pending',
         total_amount: 10000,
@@ -188,9 +189,9 @@ describe('Orders API', () => {
         })),
       };
 
-      (createServerClient as any).mockReturnValue(mockSupabase);
+      (createServerClient as any).mockResolvedValue(mockSupabase);
 
-      const supabase = createServerClient();
+      const supabase = await createServerClient();
       await supabase.from('orders').select('*').eq('user_id', 'user-123').order('created_at');
 
       expect(mockOrder).toHaveBeenCalled();

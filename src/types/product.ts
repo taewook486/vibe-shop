@@ -44,8 +44,11 @@ export interface Product {
   metadata: ProductMetadata | null;
   status: ProductStatus;
   is_featured: boolean;
+  thumbnail?: string | null;
   view_count: number;
   sales_count: number;
+  stock: number;
+  stock_alert_threshold: number;
   created_at: string;
   updated_at: string;
 }

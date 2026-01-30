@@ -11,7 +11,7 @@
 
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
-import { CheckCircle2, Download, UserPlus, ArrowRight, Package } from 'lucide-react';
+import { CheckCircle2, Download, UserPlus, Package } from 'lucide-react';
 import { createClient } from '@/lib/supabase/client';
 
 interface CheckoutSuccessContentProps {

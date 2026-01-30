@@ -43,7 +43,7 @@ describe('Middleware - 인증 및 세션 갱신', () => {
       const request = new NextRequest('http://localhost:3000/');
       mockGetSession.mockResolvedValue({ data: { session: null }, error: null });
 
-      const response = await middleware(request);
+      const response = await middleware(request, {} as any) as Response;
 
       expect(response.status).not.toBe(307); // 리다이렉트 안 됨
     });
@@ -52,7 +52,7 @@ describe('Middleware - 인증 및 세션 갱신', () => {
       const request = new NextRequest('http://localhost:3000/products');
       mockGetSession.mockResolvedValue({ data: { session: null }, error: null });
 
-      const response = await middleware(request);
+      const response = await middleware(request, {} as any) as Response;
 
       expect(response.status).not.toBe(307);
     });
@@ -61,7 +61,7 @@ describe('Middleware - 인증 및 세션 갱신', () => {
       const request = new NextRequest('http://localhost:3000/login');
       mockGetSession.mockResolvedValue({ data: { session: null }, error: null });
 
-      const response = await middleware(request);
+      const response = await middleware(request, {} as any) as Response;
 
       expect(response.status).not.toBe(307);
     });
@@ -72,7 +72,7 @@ describe('Middleware - 인증 및 세션 갱신', () => {
       const request = new NextRequest('http://localhost:3000/my/orders');
       mockGetSession.mockResolvedValue({ data: { session: null }, error: null });
 
-      const response = await middleware(request);
+      const response = await middleware(request, {} as any) as Response;
 
       expect(response.status).toBe(307);
       expect(response.headers.get('location')).toBe(
@@ -91,7 +91,7 @@ describe('Middleware - 인증 및 세션 갱신', () => {
         error: null,
       });
 
-      const response = await middleware(request);
+      const response = await middleware(request, {} as any) as Response;
 
       expect(response.status).not.toBe(307);
     });
@@ -102,7 +102,7 @@ describe('Middleware - 인증 및 세션 갱신', () => {
       const request = new NextRequest('http://localhost:3000/admin');
       mockGetSession.mockResolvedValue({ data: { session: null }, error: null });
 
-      const response = await middleware(request);
+      const response = await middleware(request, {} as any) as Response;
 
       expect(response.status).toBe(307);
       expect(response.headers.get('location')).toBe(
@@ -125,7 +125,7 @@ describe('Middleware - 인증 및 세션 갱신', () => {
         error: null,
       });
 
-      const response = await middleware(request);
+      const response = await middleware(request, {} as any) as Response;
 
       expect(response.status).toBe(307);
       expect(response.headers.get('location')).toBe('http://localhost:3000/');
@@ -146,7 +146,7 @@ describe('Middleware - 인증 및 세션 갱신', () => {
         error: null,
       });
 
-      const response = await middleware(request);
+      const response = await middleware(request, {} as any) as Response;
 
       expect(response.status).not.toBe(307);
     });
@@ -165,7 +165,7 @@ describe('Middleware - 인증 및 세션 갱신', () => {
         error: null,
       });
 
-      const response = await middleware(request);
+      const response = await middleware(request, {} as any);
 
       // getSession이 호출되어 세션 갱신됨
       expect(mockGetSession).toHaveBeenCalled();
@@ -177,7 +177,7 @@ describe('Middleware - 인증 및 세션 갱신', () => {
     it('/api/* 라우트는 미들웨어 스킵', async () => {
       const request = new NextRequest('http://localhost:3000/api/products');
 
-      const response = await middleware(request);
+      const response = await middleware(request, {} as any);
 
       // API 라우트는 middleware에서 제외됨 (config.matcher에서)
       expect(response).toBeDefined();
