@@ -110,7 +110,7 @@ export type ReviewStats = z.infer<typeof ReviewStatsSchema>;
 // Review 이미지 업로드 스키마
 export const ReviewImageUploadSchema = z.object({
   file: z.instanceof(File),
-  alt_text: z.string().optional(),
+  alt: z.string().optional(),
 });
 
 export type ReviewImageUpload = z.infer<typeof ReviewImageUploadSchema>;

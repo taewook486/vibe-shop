@@ -38,90 +38,122 @@
             - img [ref=e33]
             - generic [ref=e36]: 로그인
     - main [ref=e37]:
-      - paragraph [ref=e40]: "HTTP error! status: 500"
-    - contentinfo [ref=e41]:
-      - generic [ref=e43]:
-        - generic [ref=e44]:
-          - link "VIBE STORE" [ref=e45] [cursor=pointer]:
+      - generic [ref=e38]:
+        - complementary [ref=e39]:
+          - heading "카테고리" [level=2] [ref=e40]
+          - list [ref=e41]:
+            - listitem [ref=e42]:
+              - button "전체" [ref=e43]
+            - listitem [ref=e44]:
+              - button "디지털 상품(0)" [ref=e45]:
+                - text: 디지털 상품
+                - generic [ref=e46]: (0)
+            - listitem [ref=e47]:
+              - button "Test Category(0)" [ref=e48]:
+                - text: Test Category
+                - generic [ref=e49]: (0)
+            - listitem [ref=e50]:
+              - button "eBook(1)" [ref=e51]:
+                - text: eBook
+                - generic [ref=e52]: (1)
+            - listitem [ref=e53]:
+              - button "템플릿(1)" [ref=e54]:
+                - text: 템플릿
+                - generic [ref=e55]: (1)
+        - main [ref=e56]:
+          - generic [ref=e57]:
+            - heading "상품 목록" [level=1] [ref=e58]
+            - generic [ref=e59]:
+              - generic [ref=e60]: "정렬:"
+              - combobox "정렬" [ref=e61]:
+                - option "인기순" [selected]
+                - option "최신순"
+                - option "가격 낮은순"
+                - option "가격 높은순"
+          - generic [ref=e62]:
+            - paragraph [ref=e63]: 상품을 불러오는데 실패했습니다
+            - paragraph [ref=e64]: "HTTP error! status: 500"
+    - contentinfo [ref=e65]:
+      - generic [ref=e67]:
+        - generic [ref=e68]:
+          - link "VIBE STORE" [ref=e69] [cursor=pointer]:
             - /url: /
-          - paragraph [ref=e46]: 라이브 코딩으로 만드는 디지털 상품 쇼핑몰 스캘레톤
-          - generic [ref=e47]:
-            - link "GitHub" [ref=e48] [cursor=pointer]:
+          - paragraph [ref=e70]: 라이브 코딩으로 만드는 디지털 상품 쇼핑몰 스캘레톤
+          - generic [ref=e71]:
+            - link "GitHub" [ref=e72] [cursor=pointer]:
               - /url: https://github.com/vibelabs
-              - img [ref=e49]
-            - link "YouTube" [ref=e52] [cursor=pointer]:
+              - img [ref=e73]
+            - link "YouTube" [ref=e76] [cursor=pointer]:
               - /url: https://youtube.com/@vibelabs
-              - img [ref=e53]
-            - link "Twitter" [ref=e56] [cursor=pointer]:
+              - img [ref=e77]
+            - link "Twitter" [ref=e80] [cursor=pointer]:
               - /url: https://twitter.com/vibelabs
-              - img [ref=e57]
-            - link "Email" [ref=e59] [cursor=pointer]:
+              - img [ref=e81]
+            - link "Email" [ref=e83] [cursor=pointer]:
               - /url: mailto:hello@vibestore.com
-              - img [ref=e60]
-        - generic [ref=e63]:
-          - heading "상품" [level=3] [ref=e64]
-          - list [ref=e65]:
-            - listitem [ref=e66]:
-              - link "상품 둘러보기" [ref=e67] [cursor=pointer]:
-                - /url: /products
-            - listitem [ref=e68]:
-              - link "카테고리" [ref=e69] [cursor=pointer]:
-                - /url: /categories
-            - listitem [ref=e70]:
-              - link "신규 상품" [ref=e71] [cursor=pointer]:
-                - /url: /new
-            - listitem [ref=e72]:
-              - link "베스트 셀러" [ref=e73] [cursor=pointer]:
-                - /url: /best
-        - generic [ref=e74]:
-          - heading "고객지원" [level=3] [ref=e75]
-          - list [ref=e76]:
-            - listitem [ref=e77]:
-              - link "FAQ" [ref=e78] [cursor=pointer]:
-                - /url: /faq
-            - listitem [ref=e79]:
-              - link "문의하기" [ref=e80] [cursor=pointer]:
-                - /url: /contact
-            - listitem [ref=e81]:
-              - link "다운로드 센터" [ref=e82] [cursor=pointer]:
-                - /url: /downloads
-            - listitem [ref=e83]:
-              - link "환불 정책" [ref=e84] [cursor=pointer]:
-                - /url: /refund
-        - generic [ref=e85]:
-          - heading "회사" [level=3] [ref=e86]
-          - list [ref=e87]:
-            - listitem [ref=e88]:
-              - link "회사 소개" [ref=e89] [cursor=pointer]:
-                - /url: /about
+              - img [ref=e84]
+        - generic [ref=e87]:
+          - heading "상품" [level=3] [ref=e88]
+          - list [ref=e89]:
             - listitem [ref=e90]:
-              - link "블로그" [ref=e91] [cursor=pointer]:
-                - /url: /blog
+              - link "상품 둘러보기" [ref=e91] [cursor=pointer]:
+                - /url: /products
             - listitem [ref=e92]:
-              - link "채용" [ref=e93] [cursor=pointer]:
-                - /url: /careers
+              - link "카테고리" [ref=e93] [cursor=pointer]:
+                - /url: /categories
             - listitem [ref=e94]:
-              - link "보도자료" [ref=e95] [cursor=pointer]:
-                - /url: /press
-        - generic [ref=e96]:
-          - heading "약관 및 정책" [level=3] [ref=e97]
-          - list [ref=e98]:
-            - listitem [ref=e99]:
-              - link "이용약관" [ref=e100] [cursor=pointer]:
-                - /url: /terms
+              - link "신규 상품" [ref=e95] [cursor=pointer]:
+                - /url: /new
+            - listitem [ref=e96]:
+              - link "베스트 셀러" [ref=e97] [cursor=pointer]:
+                - /url: /best
+        - generic [ref=e98]:
+          - heading "고객지원" [level=3] [ref=e99]
+          - list [ref=e100]:
             - listitem [ref=e101]:
-              - link "개인정보처리방침" [ref=e102] [cursor=pointer]:
-                - /url: /privacy
+              - link "FAQ" [ref=e102] [cursor=pointer]:
+                - /url: /faq
             - listitem [ref=e103]:
-              - link "라이선스" [ref=e104] [cursor=pointer]:
-                - /url: /license
-      - generic [ref=e107]:
-        - paragraph [ref=e108]: © 2026 Vibe Labs. All rights reserved.
+              - link "문의하기" [ref=e104] [cursor=pointer]:
+                - /url: /contact
+            - listitem [ref=e105]:
+              - link "다운로드 센터" [ref=e106] [cursor=pointer]:
+                - /url: /downloads
+            - listitem [ref=e107]:
+              - link "환불 정책" [ref=e108] [cursor=pointer]:
+                - /url: /refund
         - generic [ref=e109]:
-          - generic [ref=e110]: MVP
-          - generic [ref=e111]: v0.1.0
+          - heading "회사" [level=3] [ref=e110]
+          - list [ref=e111]:
+            - listitem [ref=e112]:
+              - link "회사 소개" [ref=e113] [cursor=pointer]:
+                - /url: /about
+            - listitem [ref=e114]:
+              - link "블로그" [ref=e115] [cursor=pointer]:
+                - /url: /blog
+            - listitem [ref=e116]:
+              - link "채용" [ref=e117] [cursor=pointer]:
+                - /url: /careers
+            - listitem [ref=e118]:
+              - link "보도자료" [ref=e119] [cursor=pointer]:
+                - /url: /press
+        - generic [ref=e120]:
+          - heading "약관 및 정책" [level=3] [ref=e121]
+          - list [ref=e122]:
+            - listitem [ref=e123]:
+              - link "이용약관" [ref=e124] [cursor=pointer]:
+                - /url: /terms
+            - listitem [ref=e125]:
+              - link "개인정보처리방침" [ref=e126] [cursor=pointer]:
+                - /url: /privacy
+            - listitem [ref=e127]:
+              - link "라이선스" [ref=e128] [cursor=pointer]:
+                - /url: /license
+      - generic [ref=e131]:
+        - paragraph [ref=e132]: © 2026 Vibe Labs. All rights reserved.
+        - generic [ref=e133]:
+          - generic [ref=e134]: MVP
+          - generic [ref=e135]: v0.1.0
   - region "Notifications alt+T"
-  - button "Open Next.js Dev Tools" [ref=e117] [cursor=pointer]:
-    - img [ref=e118]
-  - alert [ref=e121]
+  - alert [ref=e136]
 ```

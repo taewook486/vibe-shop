@@ -5,6 +5,7 @@
  */
 
 import { config } from 'dotenv';
+import { beforeAll, vi } from 'vitest';
 
 // .env.local 로드 (실제 Supabase 연결용)
 config({ path: '.env.local' });
