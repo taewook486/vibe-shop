@@ -11,8 +11,8 @@
 
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
+import { useSession } from 'next-auth/react';
 import { CheckCircle2, Download, UserPlus, Package } from 'lucide-react';
-import { createClient } from '@/lib/supabase/client';
 
 interface CheckoutSuccessContentProps {
   searchParams: {
@@ -26,25 +26,19 @@ export default function CheckoutSuccessContent({
   searchParams,
 }: CheckoutSuccessContentProps) {
   const router = useRouter();
-  const [isAuthenticated, setIsAuthenticated] = useState<boolean | null>(null);
+  const { data: session, status } = useSession();
   const [isLoading, setIsLoading] = useState(true);
 
   const { orderId, paymentKey, amount } = searchParams;
 
-  // Check if user is authenticated
+  // Check if loading is complete
   useEffect(() => {
-    async function checkAuth() {
-      const supabase = createClient();
-      const {
-        data: { user },
-      } = await supabase.auth.getUser();
-
-      setIsAuthenticated(!!user);
+    if (status !== 'loading') {
       setIsLoading(false);
     }
+  }, [status]);
 
-    checkAuth();
-  }, []);
+  const isAuthenticated = status === 'authenticated';
 
   // Validate URL parameters
   if (!orderId || !paymentKey || !amount) {
