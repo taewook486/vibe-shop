@@ -10,6 +10,7 @@ import {
   INQUIRY_CATEGORIES,
   type InquiryCategoryType,
   type InquiryStatusType,
+  type Inquiry,
 } from '@/types/inquiry';
 
 interface InquiriesPageProps {
@@ -210,7 +211,7 @@ export default async function InquiriesPage({ searchParams }: InquiriesPageProps
           ) : (
             <div className="space-y-4">
               {inquiries.map((inquiry: unknown) => (
-                <InquiryCard key={(inquiry as { id: string }).id} inquiry={inquiry as Record<string, unknown>} />
+                <InquiryCard key={(inquiry as { id: string }).id} inquiry={inquiry as Inquiry} />
               ))}
             </div>
           )}
