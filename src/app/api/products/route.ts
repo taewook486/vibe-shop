@@ -64,7 +64,7 @@ export async function GET(request: NextRequest) {
         product_images!inner (
           id,
           url,
-          alt,
+          alt_text,
           is_primary,
           sort_order
         )
@@ -147,7 +147,7 @@ export async function GET(request: NextRequest) {
         images: images.map((img: any) => ({
           id: img.id,
           url: img.url,
-          alt: img.alt,
+          alt: img.alt_text || img.alt, // Support both alt_text and alt
           is_primary: img.is_primary,
           sort_order: img.sort_order,
         })),
