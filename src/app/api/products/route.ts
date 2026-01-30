@@ -61,13 +61,7 @@ export async function GET(request: NextRequest) {
       .from('products')
       .select(`
         *,
-        product_images!inner (
-          id,
-          url,
-          alt_text,
-          is_primary,
-          sort_order
-        )
+        product_images (*)
       `, { count: 'exact' })
       .eq('status', 'active');
 
