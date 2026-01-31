@@ -5,8 +5,10 @@
  */
 
 import Link from 'next/link';
-import { ArrowLeft, MessageCircle, Lock, Info } from 'lucide-react';
+import { ArrowLeft, MessageCircle, Lock, Info, LogIn } from 'lucide-react';
 import { InquiryForm } from '@/components/inquiries/inquiry-form';
+import { auth } from '@/lib/auth';
+import { redirect } from 'next/navigation';
 
 interface NewInquiryPageProps {
   searchParams: Promise<{
@@ -17,6 +19,71 @@ interface NewInquiryPageProps {
 export default async function NewInquiryPage({ searchParams }: NewInquiryPageProps) {
   const params = await searchParams;
   const productId = params.product_id;
+
+  // 로그인 확인
+  const session = await auth();
+  if (!session?.user) {
+    return (
+      <div className="min-h-screen bg-neo-cream">
+        <div className="max-w-3xl mx-auto px-4 py-8">
+          {/* 뒤로가기 */}
+          <Link
+            href="/inquiries"
+            className="inline-flex items-center gap-2 mb-6 text-neo-black font-bold hover:text-neo-blue transition-colors"
+          >
+            <ArrowLeft className="h-5 w-5" strokeWidth={2.5} />
+            목록으로
+          </Link>
+
+          {/* 로그인 안내 */}
+          <div className="bg-neo-white border-3 border-neo-black shadow-neo p-12 text-center">
+            <div className="w-20 h-20 mx-auto mb-6 flex items-center justify-center bg-neo-yellow border-3 border-neo-black shadow-neo">
+              <LogIn className="w-10 h-10 text-neo-black" strokeWidth={2.5} />
+            </div>
+            <h2 className="text-3xl font-black uppercase text-neo-black mb-4">
+              로그인이 필요합니다
+            </h2>
+            <p className="text-neo-black/70 mb-8 text-lg">
+              문의를 작성하려면 먼저 로그인해주세요.
+            </p>
+            <div className="flex gap-4 justify-center">
+              <Link
+                href="/api/auth/signin?callbackUrl=/inquiries/new"
+                className="inline-flex items-center gap-2 px-8 py-4 bg-neo-blue text-white border-3 border-neo-black shadow-neo font-bold uppercase hover:translate-x-[2px] hover:translate-y-[2px] hover:shadow-neo-sm transition-all"
+              >
+                <LogIn className="w-5 h-5" strokeWidth={2.5} />
+                로그인
+              </Link>
+              <Link
+                href="/inquiries"
+                className="px-8 py-4 bg-neo-white text-neo-black border-3 border-neo-black shadow-neo-sm font-bold uppercase hover:translate-x-[2px] hover:translate-y-[2px] hover:shadow-none transition-all"
+              >
+                목록으로
+              </Link>
+            </div>
+          </div>
+
+          {/* 안내 사항 */}
+          <div className="mt-6 bg-neo-yellow border-3 border-neo-black shadow-neo p-6">
+            <div className="flex items-center gap-2 mb-4">
+              <Info className="w-5 h-5 text-neo-black" strokeWidth={2.5} />
+              <h3 className="font-black uppercase text-neo-black">회원가입 안내</h3>
+            </div>
+            <ul className="space-y-2 text-neo-black/80">
+              <li className="flex items-start gap-2">
+                <span className="font-bold">•</span>
+                회원가입은 무료이며, 1분 내로 완료할 수 있습니다.
+              </li>
+              <li className="flex items-start gap-2">
+                <span className="font-bold">•</span>
+                로그인하면 문의 작성, 장바구니, 결제 등 다양한 기능을 이용하실 수 있습니다.
+              </li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    );
+  }
 
   // 상품 정보 가져오기 (product_id가 있는 경우)
   let product = null;
