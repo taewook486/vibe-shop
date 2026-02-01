@@ -2,12 +2,17 @@
  * NextAuth.js (Auth.js v5) Configuration
  *
  * - Credentials Provider (이메일/비밀번호)
+ * - Google OAuth Provider
+ * - Kakao OAuth Provider
  * - Supabase DB에서 사용자 조회
+ * - OAuth 로그인 시 자동 회원가입
  * - 세션에 role 추가
  */
 
 import NextAuth from 'next-auth';
 import Credentials from 'next-auth/providers/credentials';
+import Google from 'next-auth/providers/google';
+import Kakao from 'next-auth/providers/kakao';
 import { createClient } from '@supabase/supabase-js';
 import type { Database } from '@/types/database.types';
 
@@ -19,6 +24,7 @@ const supabaseAdmin = createClient<Database>(supabaseUrl, supabaseServiceKey);
 
 export const { handlers, signIn, signOut, auth } = NextAuth({
   providers: [
+    // Credentials Provider (이메일/비밀번호)
     Credentials({
       name: 'Credentials',
       credentials: {
@@ -77,8 +83,84 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
         };
       },
     }),
+
+    // Google OAuth Provider
+    Google({
+      clientId: process.env.GOOGLE_CLIENT_ID!,
+      clientSecret: process.env.GOOGLE_CLIENT_SECRET!,
+    }),
+
+    // Kakao OAuth Provider
+    Kakao({
+      clientId: process.env.KAKAO_CLIENT_ID!,
+      clientSecret: process.env.KAKAO_CLIENT_SECRET!,
+    }),
   ],
   callbacks: {
+    async signIn({ user, account, profile }) {
+      // OAuth 로그인 시 자동으로 profiles 생성/업데이트
+      if (account && (account.provider === 'google' || account.provider === 'kakao')) {
+        const email = user.email;
+        if (!email) {
+          return false;
+        }
+
+        // 기존 프로필 조회
+        const { data: existingProfile } = await supabaseAdmin
+          .from('profiles')
+          .select('*')
+          .eq('email', email)
+          .single();
+
+        if (existingProfile) {
+          // 기존 사용자: 차단 여부 확인 및 last_login_at 업데이트
+          if (existingProfile.is_blocked) {
+            return false;
+          }
+
+          await supabaseAdmin
+            .from('profiles')
+            .update({
+              last_login_at: new Date().toISOString(),
+              // OAuth 제공자 정보 업데이트 (선택사항)
+              ...(account.provider === 'google' && { google_id: account.providerAccountId }),
+              ...(account.provider === 'kakao' && { kakao_id: account.providerAccountId }),
+            })
+            .eq('id', existingProfile.id);
+
+          // 사용자 ID를 user 객체에 추가
+          user.id = existingProfile.id;
+          user.role = existingProfile.role;
+        } else {
+          // 신규 사용자: profiles 생성
+          const { data: newProfile, error: insertError } = await supabaseAdmin
+            .from('profiles')
+            .insert({
+              email: email,
+              nickname: user.name || email.split('@')[0],
+              avatar_url: user.image,
+              role: 'customer',
+              // OAuth 제공자 정보 저장
+              ...(account.provider === 'google' && { google_id: account.providerAccountId }),
+              ...(account.provider === 'kakao' && { kakao_id: account.providerAccountId }),
+              last_login_at: new Date().toISOString(),
+            })
+            .select()
+            .single();
+
+          if (insertError || !newProfile) {
+            console.error('Profile creation failed:', insertError);
+            return false;
+          }
+
+          // 사용자 ID를 user 객체에 추가
+          user.id = newProfile.id;
+          user.role = newProfile.role;
+        }
+      }
+
+      return true;
+    },
     async jwt({ token, user }) {
       // 초기 로그인 시 user 정보를 token에 추가
       if (user) {
