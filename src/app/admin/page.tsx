@@ -5,8 +5,10 @@
  * - Neo-Brutalism 디자인
  */
 
-import { Suspense } from 'react';
-import { createServerClient } from '@/lib/supabase/server';
+'use client';
+
+import { useState, useEffect } from 'react';
+import { createClient } from '@/lib/supabase/client';
 import {
   ShoppingCart,
   TrendingUp,
@@ -43,36 +45,19 @@ interface RecentOrder {
   user_email: string;
 }
 
-async function getOrderStats(): Promise<OrderStats> {
-  const supabase = await createServerClient();
-
-  const { data: orders, error } = await supabase
-    .from('orders')
-    .select('status');
-
-  if (error || !orders) {
-    return { total: 0, pending: 0, completed: 0, cancelled: 0 };
-  }
+function getOrderStats(orders: any[]): OrderStats {
+  if (!orders || orders.length === 0) return { total: 0, pending: 0, completed: 0, cancelled: 0 };
 
   return {
     total: orders.length,
-    pending: orders.filter((o) => o.status === 'pending').length,
-    completed: orders.filter((o) => o.status === 'completed').length,
-    cancelled: orders.filter((o) => o.status === 'cancelled').length,
+    pending: orders.filter((o: any) => o.status === 'pending').length,
+    completed: orders.filter((o: any) => o.status === 'completed').length,
+    cancelled: orders.filter((o: any) => o.status === 'cancelled').length,
   };
 }
 
-async function getRevenueStats(): Promise<RevenueStats> {
-  const supabase = await createServerClient();
-
-  const { data: orders, error } = await supabase
-    .from('orders')
-    .select('total_amount, created_at')
-    .eq('status', 'completed');
-
-  if (error || !orders) {
-    return { total: 0, today: 0, thisMonth: 0, thisYear: 0 };
-  }
+function getRevenueStats(orders: any[]): RevenueStats {
+  if (!orders || orders.length === 0) return { total: 0, today: 0, thisMonth: 0, thisYear: 0 };
 
   const now = new Date();
   const todayStart = new Date(now.getFullYear(), now.getMonth(), now.getDate());
@@ -80,55 +65,51 @@ async function getRevenueStats(): Promise<RevenueStats> {
   const yearStart = new Date(now.getFullYear(), 0, 1);
 
   return {
-    total: orders.reduce((sum, order) => sum + (order.total_amount || 0), 0),
+    total: orders.reduce((sum: number, order: any) => sum + (order.total_amount || 0), 0),
     today: orders
-      .filter((o) => new Date(o.created_at) >= todayStart)
-      .reduce((sum, order) => sum + (order.total_amount || 0), 0),
+      .filter((o: any) => new Date(o.created_at) >= todayStart)
+      .reduce((sum: number, order: any) => sum + (order.total_amount || 0), 0),
     thisMonth: orders
-      .filter((o) => new Date(o.created_at) >= monthStart)
-      .reduce((sum, order) => sum + (order.total_amount || 0), 0),
+      .filter((o: any) => new Date(o.created_at) >= monthStart)
+      .reduce((sum: number, order: any) => sum + (order.total_amount || 0), 0),
     thisYear: orders
-      .filter((o) => new Date(o.created_at) >= yearStart)
-      .reduce((sum, order) => sum + (order.total_amount || 0), 0),
+      .filter((o: any) => new Date(o.created_at) >= yearStart)
+      .reduce((sum: number, order: any) => sum + (order.total_amount || 0), 0),
   };
 }
 
-async function getRecentOrders(): Promise<RecentOrder[]> {
-  const supabase = await createServerClient();
-
+async function getRecentOrders(supabase: any): Promise<RecentOrder[]> {
   const { data: orders, error } = await supabase
     .from('orders')
     .select(
       `
-      id,
-      order_number,
-      created_at,
-      status,
-      total_amount,
-      user_id,
-      guest_email
-    `
+        id,
+        order_number,
+        created_at,
+        status,
+        total_amount,
+        user_id,
+        guest_email
+      `
     )
     .order('created_at', { ascending: false })
     .limit(5);
 
-  if (error || !orders) {
-    return [];
-  }
+  if (error || !orders) return [];
 
   const userIds = orders
-    .filter((o) => o.user_id)
-    .map((o) => o.user_id)
-    .filter((id): id is string => Boolean(id));
+    .filter((o: any) => o.user_id)
+    .map((o: any) => o.user_id)
+    .filter((id: any): id is string => Boolean(id));
 
   const { data: profiles } = await supabase
     .from('profiles')
     .select('id, email')
     .in('id', userIds);
 
-  const profileMap = new Map(profiles?.map((p) => [p.id, p.email]) || []);
+  const profileMap = new Map(profiles?.map((p: any) => [p.id, p.email]) || []);
 
-  return orders.map((order) => ({
+  return orders.map((order: any) => ({
     id: order.id,
     order_number: order.order_number,
     created_at: order.created_at,
@@ -177,31 +158,54 @@ function DashboardLoading() {
   );
 }
 
-async function DashboardContent() {
-  const [orderStats, revenueStats, recentOrders] = await Promise.all([
-    getOrderStats(),
-    getRevenueStats(),
-    getRecentOrders(),
-  ]);
+function DashboardContent() {
+  const [orderStats, setOrderStats] = useState<OrderStats | null>(null);
+  const [revenueStats, setRevenueStats] = useState<RevenueStats | null>(null);
+  const [recentOrders, setRecentOrders] = useState<RecentOrder[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
+
+  useEffect(() => {
+    async function loadDashboardData() {
+      try {
+        const supabase = createClient();
+
+        const [{ data: orders1 }, { data: orders2 }, { data: orders3 }] = await Promise.all([
+          supabase.from('orders').select('status'),
+          supabase.from('orders').select('total_amount, created_at').eq('status', 'completed'),
+          supabase.from('orders').select('id, order_number, created_at, status, total_amount, user_id, guest_email').order('created_at', { ascending: false }).limit(5),
+        ]);
+
+        setOrderStats(getOrderStats(orders1 || []));
+        setRevenueStats(getRevenueStats(orders2 || []));
+        setRecentOrders(await getRecentOrders(supabase));
+        setIsLoading(false);
+      } catch (error) {
+        console.error('Failed to load dashboard data:', error);
+        setIsLoading(false);
+      }
+    }
+
+    loadDashboardData();
+  }, []);
 
   const statsCards = [
     {
       title: '총 주문',
-      value: orderStats.total.toString(),
-      description: `대기: ${orderStats.pending} / 완료: ${orderStats.completed}`,
+      value: orderStats?.total?.toString() || '0',
+      description: `대기: ${orderStats?.pending || 0} / 완료: ${orderStats?.completed || 0}`,
       icon: ShoppingCart,
       color: 'bg-neo-yellow',
     },
     {
       title: '총 매출',
-      value: formatCurrency(revenueStats.total),
+      value: revenueStats ? formatCurrency(revenueStats.total) : '₩0',
       description: '전체 기간',
       icon: DollarSign,
       color: 'bg-neo-green',
     },
     {
       title: '오늘 매출',
-      value: formatCurrency(revenueStats.today),
+      value: revenueStats ? formatCurrency(revenueStats.today) : '₩0',
       description: '오늘 발생한 매출',
       icon: TrendingUp,
       color: 'bg-neo-blue',
@@ -209,13 +213,15 @@ async function DashboardContent() {
     },
     {
       title: '이번 달 매출',
-      value: formatCurrency(revenueStats.thisMonth),
+      value: revenueStats ? formatCurrency(revenueStats.thisMonth) : '₩0',
       description: '이번 달 누적',
       icon: Package,
       color: 'bg-neo-pink',
       trend: '+8.2%',
     },
   ];
+
+  if (isLoading) return <DashboardLoading />;
 
   return (
     <>
@@ -250,7 +256,7 @@ async function DashboardContent() {
       </div>
 
       {/* Quick Actions & Order Status */}
-      <div className="grid gap-4 md:grid-cols-2">
+      <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
         <div className="bg-neo-white border-3 border-neo-black shadow-neo p-6">
           <h2 className="font-black text-neo-black uppercase mb-4">빠른 작업</h2>
           <div className="flex flex-wrap gap-2">
@@ -284,7 +290,7 @@ async function DashboardContent() {
                 <span className="font-bold">대기 중</span>
               </div>
               <span className="px-3 py-1 bg-neo-orange border-2 border-neo-black font-black">
-                {orderStats.pending}건
+                {orderStats?.pending || 0}건
               </span>
             </div>
             <div className="flex items-center justify-between p-3 bg-neo-cream border-2 border-neo-black">
@@ -293,59 +299,58 @@ async function DashboardContent() {
                 <span className="font-bold">완료</span>
               </div>
               <span className="px-3 py-1 bg-neo-green border-2 border-neo-black font-black">
-                {orderStats.completed}건
+                {orderStats?.completed || 0}건
               </span>
             </div>
           </div>
         </div>
-      </div>
 
-      {/* Recent Orders */}
-      <div className="bg-neo-white border-3 border-neo-black shadow-neo">
-        <div className="flex items-center justify-between p-6 border-b-3 border-neo-black">
-          <h2 className="font-black text-neo-black uppercase">최근 주문</h2>
-          <Link
-            href="/admin/orders"
-            className="flex items-center gap-1 text-sm font-bold text-neo-blue hover:underline"
-          >
-            전체보기
-            <ArrowRight className="w-4 h-4" strokeWidth={2.5} />
-          </Link>
-        </div>
-        <div className="p-6">
-          {recentOrders.length === 0 ? (
-            <div className="text-center py-8 text-neo-black/60 font-medium">
-              주문이 없습니다.
-            </div>
-          ) : (
-            <div className="space-y-3" data-testid="recent-orders-list">
-              {recentOrders.map((order) => {
-                const statusStyle = STATUS_STYLES[order.status] || STATUS_STYLES.pending;
-                return (
-                  <Link
-                    key={order.id}
-                    href={`/admin/orders/${order.id}`}
-                    className="flex items-center justify-between p-4 border-2 border-neo-black hover:bg-neo-cream/50 transition-colors"
-                  >
-                    <div className="flex-1">
-                      <div className="flex items-center gap-2 mb-1">
-                        <span className="font-bold text-neo-black">{order.order_number}</span>
-                        <span className={`px-2 py-0.5 text-xs font-bold border border-neo-black ${statusStyle.bg}`}>
-                          {statusStyle.label}
-                        </span>
+        <div className="bg-neo-white border-3 border-neo-black shadow-neo p-6">
+          <div className="flex items-center justify-between p-6 border-b-3 border-neo-black">
+            <h3 className="font-black text-neo-black uppercase">최근 주문</h3>
+            <Link
+              href="/admin/orders"
+              className="flex items-center gap-1 text-sm font-bold text-neo-blue hover:underline"
+            >
+              전체보기
+              <ArrowRight className="w-4 h-4" strokeWidth={2.5} />
+            </Link>
+          </div>
+          <div className="p-6">
+            {recentOrders.length === 0 ? (
+              <div className="text-center py-8 text-neo-black/60 font-medium">
+                주문이 없습니다.
+              </div>
+            ) : (
+              <div className="space-y-3" data-testid="recent-orders-list">
+                {recentOrders.map((order) => {
+                  const statusStyle = STATUS_STYLES[order.status] || STATUS_STYLES.pending;
+                  return (
+                    <Link
+                      key={order.id}
+                      href={`/admin/orders/${order.id}`}
+                      className="flex items-center justify-between p-4 border-2 border-neo-black hover:bg-neo-cream/50 transition-colors"
+                    >
+                      <div className="flex-1">
+                        <div className="flex items-center gap-2 mb-1">
+                          <span className="font-bold text-neo-black">{order.order_number}</span>
+                          <span className={`px-2 py-0.5 text-xs font-bold border border-neo-black ${statusStyle.bg}`}>
+                            {statusStyle.label}
+                          </span>
+                        </div>
+                        <div className="text-sm text-neo-black/60">
+                          {order.user_email} · {formatDate(order.created_at)}
+                        </div>
                       </div>
-                      <div className="text-sm text-neo-black/60">
-                        {order.user_email} · {formatDate(order.created_at)}
+                      <div className="font-black text-neo-black">
+                        {formatCurrency(order.total_amount)}
                       </div>
-                    </div>
-                    <div className="font-black text-neo-black">
-                      {formatCurrency(order.total_amount)}
-                    </div>
-                  </Link>
-                );
-              })}
-            </div>
-          )}
+                    </Link>
+                  );
+                })}
+              </div>
+            )}
+          </div>
         </div>
       </div>
     </>
@@ -370,9 +375,7 @@ export default function AdminDashboard() {
         </div>
       </div>
 
-      <Suspense fallback={<DashboardLoading />}>
-        <DashboardContent />
-      </Suspense>
+      <DashboardContent />
     </div>
   );
 }
