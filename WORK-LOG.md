@@ -101,6 +101,79 @@ Vibe Store 프로젝트 작업 기록
 
 ---
 
+## 2026-02-04 (추가)
+
+### 작업: 관리자 계정 생성 로직 연구
+
+#### 📋 연구 요약
+- 관리자 계정을 자동으로 만드는 로직 소스 분석
+- Supabase와 NextAuth.js에서 admin role 관리 방법 파악
+
+#### 🔍 분석 결과
+
+**1. 현재 시스템 구조**
+- DB `profiles` 테이블에 `role` 컬럼 존재 (`'customer'` 또는 `'admin'`)
+- NextAuth.js 인증 시 DB에서 role 조회하여 세션에 포함
+- Middleware에서 `/admin/*` 접근 시 `role === 'admin'` 확인
+
+**2. 자동 admin 계정 생성 로직**
+- **결과:** 자동으로 admin 계정을 만드는 코드가 없음
+- `scripts/seed.ts`: 카테고리, 상품, 태그만 시드
+- `scripts/setup-wizard.ts`: 설정만, 관리자 계정 생성 없음
+
+**3. SQL 마이그레이션 기록**
+- `supabase/migrations/007_create_rls_policies.sql` (라인 278-281)
+- 주석 내용:
+  ```sql
+  -- 테스트용 관리자 계정 생성은 Supabase Dashboard에서 수동으로 진행
+  -- 이메일: admin@vibestore.com
+  -- 가입 후 profiles 테이블에서 role을 'admin'으로 변경
+  ```
+
+**4. 정식 가이드 (Supabase Dashboard 수동 방법)**
+- 1단계: Supabase Dashboard → Authentication → Users → "Add user"
+  - 이메일: `admin@vibestore.com` (또는 원하는 이메일)
+  - 비밀번호 설정
+  - "Create user" 클릭
+  - 이메일 인증 (활성화된 경우)
+
+- 2단계: SQL Editor에서 role 변경
+  ```sql
+  UPDATE profiles
+  SET role = 'admin'
+  WHERE email = 'admin@vibestore.com';
+  ```
+
+- 3단계: 로그인 테스트
+  - `https://vibe-shop-swart.vercel.app/auth/login` 접속
+  - admin 이메일과 비밀번호로 로그인
+  - `/admin` 페이지 접속 → 관리자 대시보드 표시됨
+
+#### 💡 설계 의도 (보안)
+
+1. **자동화된 관리자 계정 취약점 방지**
+   - 코드에 기본 admin 계정 정보가 없으면
+   - 외부에서 기본 관리자 비밀번호를 알 수 없음
+
+2. **RLS 정책과의 호환**
+   - `role` 컬럼: `CHECK (role IN ('customer', 'admin'))`
+   - Service Role Key로만 직접 role 변경 가능
+   - 일반 사용자 API는 role 변경 불가
+
+3. **최소 권한 원칙**
+   - Supabase Service Role Key 필요
+   - 권한 있는 사용자만 관리자 권한 부여 가능
+
+#### 📋 참고
+
+**19개 스킵된 관리자 테스트의 의미:**
+- 테스트 코드는 작성되어 있음
+- 하지만 **관리자 인증 기능이 구현되어 있지 않아서** 실행하지 않음
+- 테스트를 실행하려면 먼저 위 가이드로 관리자 계정 생성 필요
+- 이는 **버그가 아님** - 테스트 미완성 상태
+
+---
+
 ## 작업 관리
 
 ### 진행 중인 작업
@@ -108,9 +181,35 @@ Vibe Store 프로젝트 작업 기록
 
 ### 완료된 작업
 - [x] 모든 테스트 실패 수정 및 배포
+- [x] 관리자 계정 생성 로직 연구 및 문서화
 
 ---
 
 ## 최종 상태
 
 ✅ **모든 비스킵 테스트 배포된 사이트에서 통과**
+✅ **관리자 계정 생성 가이드 문서화 완료**
+
+### 📌 관리자 계정 생성 가이드
+
+Supabase Dashboard에서 수동으로 관리자 계정을 생성해야 합니다:
+
+**1단계 - 계정 생성:**
+- Supabase Dashboard → Project → Authentication → Users
+- "Add user" 클릭
+- 이메일과 비밀번호 입력
+- "Create user" 클릭
+
+**2단계 - Role 할당:**
+- SQL Editor 접속
+- 다음 SQL 실행:
+  ```sql
+  UPDATE profiles
+  SET role = 'admin'
+  WHERE email = '사용한 이메일';
+  ```
+
+**3단계 - 로그인:**
+- `https://vibe-shop-swart.vercel.app/auth/login` 접속
+- 관리자 계정으로 로그인
+- `/admin` 접속 → 관리자 기능 사용 가능
