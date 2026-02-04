@@ -118,7 +118,8 @@ export default function InquiryManagement({ productId }: InquiryManagementProps)
       if (statusFilter !== 'all') params.append('status', statusFilter);
       if (categoryFilter !== 'all') params.append('category', categoryFilter);
 
-      const response = await fetch(`/api/inquiries?${params.toString()}`);
+      const origin = typeof window !== 'undefined' ? window.location.origin : '';
+      const response = await fetch(`${origin}/api/inquiries?${params.toString()}`);
       const data = await response.json();
 
       if (response.ok) {

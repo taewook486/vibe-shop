@@ -92,7 +92,8 @@ export default function ReviewManagement({ productId }: ReviewManagementProps) {
       if (endDate) params.append('end_date', endDate);
       params.append('sort', sortBy);
 
-      const response = await fetch(`/api/reviews?${params.toString()}`);
+      const origin = typeof window !== 'undefined' ? window.location.origin : '';
+      const response = await fetch(`${origin}/api/reviews?${params.toString()}`);
       const data = await response.json();
 
       if (response.ok) {
