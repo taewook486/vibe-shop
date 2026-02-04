@@ -133,7 +133,7 @@ export async function GET(request: NextRequest) {
         // 각 제품별 이미지를 개별 조회
         const imagesPromises = productIds.map(async (productId) => {
           // Try alt_text column first (production)
-          let { data: images, error } = await supabase
+            const { data: productImages, error } = await supabase
             .from('product_images')
             .select('*')
             .eq('product_id', productId);
@@ -146,10 +146,10 @@ export async function GET(request: NextRequest) {
               .select('*')
               .eq('product_id', productId);
 
-            images = imagesData || [];
+            const productImages = imagesData || [];
           }
 
-          return { productId, images: images || [] };
+          return { productId, images: productImages || [] };
         });
 
         const imagesResults = await Promise.all(imagesPromises);
@@ -168,16 +168,16 @@ export async function GET(request: NextRequest) {
 
     // 응답 생성 - 이미지 처리
     const productsWithImages = (products || []).map((p: any) => {
-      const images = imagesMap[p.id] || [];
+      const productImages = imagesMap[p.id] || [];
       // 대표 이미지 찾기 (is_primary=true 또는 첫번째 이미지)
-      const primaryImage = images.find((img: any) => img.is_primary) || images[0];
-
+      const primaryImage = productImages.find((img: any) => img.is_primary) || productImages[0];
+      
       return {
         ...p,
         metadata: p.metadata as any,
         // 프론트엔드에서 사용할 이미지 필드 추가
         thumbnail: primaryImage?.url || null,
-        images: images.map((img: any) => ({
+        images: productImages.map((img: any) => ({
           id: img.id,
           url: img.url,
           alt: img.alt_text || img.alt || '', // Support both alt_text and alt

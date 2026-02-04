@@ -136,15 +136,14 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
           const { data: newProfile, error: insertError } = await supabaseAdmin
             .from('profiles')
             .insert({
-              email: email,
+              email,
               nickname: user.name || email.split('@')[0],
               avatar_url: user.image,
               role: 'customer',
               // OAuth 제공자 정보 저장
               ...(account.provider === 'google' && { google_id: account.providerAccountId }),
               ...(account.provider === 'kakao' && { kakao_id: account.providerAccountId }),
-              last_login_at: new Date().toISOString(),
-            })
+            } as any)
             .select()
             .single();
 
