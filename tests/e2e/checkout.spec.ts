@@ -27,18 +27,20 @@ test.describe('Checkout', () => {
     await expect(page.locator('h1')).toContainText(/결제|주문/);
   });
 
-  test('should require authentication for checkout', async ({ page }) => {
+  test('should support guest checkout with email input', async ({ page }) => {
     await page.context().clearCookies();
     await page.goto('/checkout');
 
-    // Check if redirected to login
-    const isLogin = page.url().includes('/login');
+    // Should stay on checkout page (not redirect to login)
+    await expect(page).toHaveURL(/\/checkout/);
 
-    if (!isLogin) {
-      // Check for login required message
-      const hasLoginMessage = await page.getByText(/로그인이 필요/).count() > 0;
-      expect(hasLoginMessage || isLogin).toBeTruthy();
-    }
+    // Should show email input for guest checkout
+    const emailInput = page.locator('input[type="email"]');
+    await expect(emailInput).toBeVisible();
+
+    // Should show checkout button
+    const checkoutBtn = page.getByRole('button', { name: /가상 결제|결제하기/ });
+    await expect(checkoutBtn).toBeVisible();
   });
 
   test('should display order summary', async ({ page }) => {
