@@ -4,6 +4,58 @@ Vibe Store 프로젝트 작업 기록
 
 ---
 
+## 2026-02-07
+
+### 작업: 코드 품질 개선 및 프로젝트 정리
+
+#### 📋 작업 요약
+- ESLint 경고 수정 (unused imports 제거)
+- 설계 문서 정리 및 plan/ 폴더 구조화
+- GitHub 커밋 및 Vercel 배포
+
+#### ✅ 완료한 작업
+
+**1. 코드 품질 개선**
+- **파일:** `tests/types/community.test.ts`
+- **문제:** 8개의 unused import 경고
+- **해결:** 미사용 import 제거
+  - `UpdateReviewSchema`
+  - `ReviewFilterSchema`
+  - `UpdateInquirySchema`
+  - `AnswerInquirySchema`
+  - `InquiryFilterSchema`
+  - `InquiryStatsSchema`
+  - `UpdateCommentSchema`
+  - `CommentFilterSchema`
+- **결과:** ESLint 경고 0개, TypeScript 오류 0개
+
+**2. 설계 문서 정리**
+- **작업:** `plan/` 폴더 생성 및 44개 파일 재구성
+- **구조:**
+  - `plan/planning/` - 설계 문서 (PRD, TRD, DB Design 등 9개)
+  - `plan/completion/` - 완료 보고서 (1개)
+  - `plan/deployment/` - 배포 가이드 (Docker, Vercel 등 6개)
+  - `plan/*.md` - 작업 완료 보고서 (28개)
+- **제거:** 빈 `docs/` 폴더 정리
+
+#### 📝 커밋 내역
+
+**1.** `chore: Fix ESLint unused imports in community.test.ts`
+   - tests/types/community.test.ts unused import 8개 제거
+
+**2.** `chore: Reorganize planning documents into plan/ folder`
+   - plan/ 폴더 생성
+   - 44개 설계 문서 재구성
+   - docs/ 폴더 정리
+
+#### 🚀 배포 정보
+
+**프로덕션 URL:** https://vibe-shop-swart.vercel.app
+
+**빌드 상태:** ✅ 대기 중
+
+---
+
 ## 2026-02-04
 
 ### 작업: 모든 테스트 실패 수정 및 배포

@@ -2,8 +2,6 @@ import { describe, it, expect } from 'vitest';
 import {
   ReviewSchema,
   CreateReviewSchema,
-  UpdateReviewSchema,
-  ReviewFilterSchema,
   ReviewStatsSchema,
   REVIEW_RATING_LABELS,
   REVIEW_SORT_OPTIONS,
@@ -11,10 +9,6 @@ import {
 import {
   InquirySchema,
   CreateInquirySchema,
-  UpdateInquirySchema,
-  AnswerInquirySchema,
-  InquiryFilterSchema,
-  InquiryStatsSchema,
   INQUIRY_CATEGORIES,
   INQUIRY_STATUS,
   INQUIRY_SORT_OPTIONS,
@@ -22,8 +16,6 @@ import {
 import {
   CommentSchema,
   CreateCommentSchema,
-  UpdateCommentSchema,
-  CommentFilterSchema,
   LikeSchema,
   ToggleLikeSchema,
   LikeStateSchema,
